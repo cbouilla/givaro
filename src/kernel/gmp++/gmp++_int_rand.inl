@@ -67,11 +67,8 @@ namespace Givaro {
 	/*  random number smaller than m  */
 	/* ****************************** */
 
-	//! returns a random integer \p r in the intervall <code>[[x, m-1]]</code>
-	//! where x = 0 or -(m-1) according to \p ALWAYSPOSITIVE
-	//! @bug m \b has to be an integer here.
-	//@{
 #ifdef __GMP_PLUSPLUS__
+	//! returns a random integer \p r in the intervall <code>[[0, m-1]]</code>
 	template<bool ALWAYSPOSITIVE>
 	Integer& Integer::random_lessthan (Integer& r, const Integer & m)
 	{
@@ -81,6 +78,7 @@ namespace Givaro {
 		return r;
 	}
 #else
+	//! returns a random integer \p r in the intervall <code>[[0, m-1]]</code>
 	template<bool ALWAYSPOSITIVE>
 	Integer& Integer::random_lessthan (Integer& r, const Integer & m)
 	{
@@ -93,17 +91,31 @@ namespace Givaro {
 	{
 		return random_lessthan<true>(r,m);
 	}
-	//@}
+	Integer& Integer::random_lessthan_2exp (Integer& r, const long unsigned int & m)
+	{
+		return random_lessthan_2exp<true>(r,m);
+	}
+	Integer Integer::random_lessthan_2exp (const long unsigned int & m)
+	{
+		return random_lessthan_2exp<true>(m);
+	}
+	Integer& Integer::random_lessthan (Integer& r, const long unsigned int & m)
+	{
+		return random_lessthan<true>(r,m);
+	}
+
+	template<class T>
+	Integer Integer::random_lessthan (const T & m)
+	{
+		return random_lessthan<true>(m);
+	}
 
 	/* ******************************** */
 	/*  random number smaller than 2^m  */
 	/* ******************************** */
-	//! returns a random integer \p r in the intervall <code>[[x, 2^m-1]]</code>
-	//! where x = 0 or -(2^m-1) according to \p ALWAYSPOSITIVE
-	//! returns a random integer \p r of at most \p m bits
-	//@{
 
 #ifdef __GMP_PLUSPLUS__
+	//! returns a random integer \p r of at most \p m bits
 	template<bool ALWAYSPOSITIVE>
 	Integer& Integer::random_lessthan_2exp (Integer& r, const long unsigned int & m)
 	{
@@ -114,6 +126,7 @@ namespace Givaro {
 		return r;
 	}
 #else
+	//! returns a random integer \p r of at most \p m bits
 	template<bool ALWAYSPOSITIVE>
 	Integer& Integer::random_lessthan_2exp (Integer& r, const long unsigned int & m)
 	{
@@ -131,7 +144,7 @@ namespace Givaro {
 		return r;
 	}
 
-	/* synonyms CAREFULL: when m is integer, meaning is different*/
+	/* synonyms */
 	template<bool ALWAYSPOSITIVE>
 	Integer& Integer::random_lessthan (Integer& r, const long unsigned int & m)
 	{
@@ -142,31 +155,8 @@ namespace Givaro {
 	Integer Integer::random_lessthan (const T & m)
 	{
 		Integer res ;
-		return Integer::random_lessthan<ALWAYSPOSITIVE>(res,(typename Signed_Trait<T>::unsigned_type)m);
+		return Integer::random_lessthan<ALWAYSPOSITIVE>(res,m);
 	}
-
-	Integer& Integer::random_lessthan_2exp (Integer& r, const long unsigned int & m)
-	{
-		return random_lessthan_2exp<true>(r,m);
-	}
-
-	Integer Integer::random_lessthan_2exp (const long unsigned int & m)
-	{
-		return random_lessthan_2exp<true>(m);
-	}
-
-	Integer& Integer::random_lessthan (Integer& r, const long unsigned int & m)
-	{
-		return random_lessthan<true>(r,m);
-	}
-
-	template<class T>
-	Integer Integer::random_lessthan (const T & m)
-	{
-		return random_lessthan<true>(m);
-	}
-	//@}
-
 
 	/* ********************************* */
 	/*  random number of same size as s  */
@@ -311,7 +301,7 @@ namespace Givaro {
 	template<bool ALWAYSPOSITIVE,class T>
 	Integer& Integer::random (Integer& r, const T & m)
 	{
-		return Integer::random_lessthan<ALWAYSPOSITIVE>(r, (typename Signed_Trait<T>::unsigned_type) m) ;
+		return Integer::random_lessthan<ALWAYSPOSITIVE>(r,m) ;
 	}
 
 	//! returns a random integer less than...

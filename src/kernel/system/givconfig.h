@@ -65,9 +65,9 @@
 // - yy: minor version number
 // - zz: revision number
 #define GIVARO_MAJOR_VERSION    3
-#define GIVARO_MINOR_VERSION    7
-#define GIVARO_REVISION_VERSION 2
-#define GIVARO_VERSION          30702
+#define GIVARO_MINOR_VERSION    6
+#define GIVARO_REVISION_VERSION 1
+#define GIVARO_VERSION          30601
 
 // -- Defines this value both to compile the library of user program
 // value: integer that defines debug level trace information (not well defined)
@@ -84,66 +84,50 @@
 #define __STDC_LIMIT_MACROS
 #endif
 #include <stdint.h>
-#if !defined(INT64_MAX)
-#if !defined(__CYGWIN__)
+#ifndef INT64_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define INT64_MAX std::numeric_limits<int64_t>::max()
 #endif
 
-#if !defined(UINT64_MAX)
-#if !defined(__CYGWIN__)
+#ifndef UINT64_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define UINT64_MAX std::numeric_limits<uint64_t>::max()
 #endif
 
-#if !defined(INT32_MAX)
-#if !defined(__CYGWIN__)
+#ifndef INT32_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define INT32_MAX std::numeric_limits<int32_t>::max()
 #endif
 
-#if !defined(UINT32_MAX)
-#if !defined(__CYGWIN__)
+#ifndef UINT32_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define UINT32_MAX std::numeric_limits<uint32_t>::max()
 #endif
 
-#if !defined(INT16_MAX)
-#if !defined(__CYGWIN__)
+#ifndef INT16_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define INT16_MAX std::numeric_limits<int16_t>::max()
 #endif
 
-#if !defined(UINT16_MAX)
-#if !defined(__CYGWIN__)
+#ifndef UINT16_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define UINT16_MAX std::numeric_limits<uint16_t>::max()
 #endif
 
-#if !defined(INT8_MAX)
-#if !defined(__CYGWIN__)
+#ifndef INT8_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define INT8_MAX std::numeric_limits<int8_t>::max()
 #endif
 
-#if !defined(UINT8_MAX)
-#if !defined(__CYGWIN__)
+#ifndef UINT8_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define UINT8_MAX std::numeric_limits<uint8_t>::max()
 #endif
@@ -423,15 +407,6 @@ template<> struct Signed_Trait<unsigned long>  : public GIVARO_numeric_limits<un
     typedef unsigned long long unsigned_type;
   };
   #endif
-
-
-
-#if defined(_OPENMP) || defined(OMP_H) || defined(__OMP_H) || defined(__pmp_omp_h)
-#define GIVAVO_USES_OMP 1
-#else
-#undef GIVAVO_USES_OMP
-#endif
-
 
 #endif
 // vim:sts=8:sw=8:ts=8:noet:sr:cino=>s,f0,{0,g0,(0,\:0,t0,+0,=s

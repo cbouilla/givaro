@@ -233,8 +233,6 @@ public:
   const Element one;
   const Element mOne;
 
-public: static inline Residu_t getMaxModulus() { return 16381; }
-    
 
 };
 

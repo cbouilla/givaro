@@ -125,8 +125,6 @@ namespace Givaro {
 	int 		jacobi(const Integer& u, const Integer& v) ;
 	int 		legendre(const Integer& u, const Integer& v) ;
 
-	bool            isOdd(const Integer&);
-
 	long unsigned 	length (const Integer& a);
 	// (FILE gmp++_int_io.C)
 
@@ -1030,11 +1028,6 @@ namespace Givaro {
 		 */
 		static giv_all_inlined  Integer& divexact (Integer& q,
 							   const Integer& n, const Integer& d);
-		static giv_all_inlined  Integer& divexact (Integer& q,
-							   const Integer& n, const unsigned long & d);
-		static giv_all_inlined  Integer& divexact (Integer& q,
-							   const Integer& n, const long & d);
-
 		/*! Division when \c d divides \c n.
 		 * @param n dividend
 		 * @param d divisor
@@ -1042,23 +1035,6 @@ namespace Givaro {
 		 * @warning if quotient is not exact, the result is not predictable.
 		 */
 		static giv_all_inlined  Integer  divexact (const Integer& n, const Integer& d);
-		static giv_all_inlined  Integer  divexact (const Integer& n, const unsigned long & d);
-		static giv_all_inlined  Integer  divexact (const Integer& n, const long & d);
-
-		//! Stuff
-	static giv_all_inlined Integer& trem(Integer& r, const Integer &n , const Integer & d);
-	static giv_all_inlined Integer& crem(Integer& r, const Integer &n , const Integer & d);
-	static giv_all_inlined Integer& frem(Integer& r, const Integer &n , const Integer & d);
-
-		//! Stuff
-	static giv_all_inlined Integer& trem(Integer& r, const Integer &n , const unsigned long& d);
-	static giv_all_inlined Integer& crem(Integer& r, const Integer &n , const unsigned long & d);
-	static giv_all_inlined Integer& frem(Integer& r, const Integer &n , const unsigned long & d);
-
-		//! Stuff
-	static giv_all_inlined unsigned long trem(const Integer &n , const unsigned long& d);
-	static giv_all_inlined unsigned long crem(const Integer &n , const unsigned long & d);
-	static giv_all_inlined unsigned long frem(const Integer &n , const unsigned long & d);
 
 		/*! Division operator.
 		 * @param d divisor
@@ -1485,9 +1461,6 @@ namespace Givaro {
 		//! absolute value
 		friend giv_all_inlined  Integer abs(const Integer& n);
 
-		//! parity of an integer
-		friend giv_all_inlined  bool isOdd(const Integer&);
-
 		//! @name primes
 		///@{
 		friend giv_all_inlined  Integer& prevprime(Integer&, const Integer& p);
@@ -1563,10 +1536,6 @@ namespace Givaro {
 		giv_all_inlined operator vect_t() const ;
 		///@}
 
-		// (FILE gmp++_int_other.C)
-		//! Other stuff gmp has (temporary)
-		///@{
-		///@}
 		// (FILE gmp++_int_rand.inl)
 		/* BB:
 		 * if the following functions are NOT static inline, one

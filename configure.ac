@@ -6,12 +6,12 @@
 
 AC_PREREQ(2.61)
 
-AC_INIT([Givaro],[3.7.2],[Jean-Guillaume.Dumas@imag.fr],[givaro],
+AC_INIT([Givaro],[3.6.1],[Jean-Guillaume.Dumas@imag.fr],[givaro],
 		[http://ljk.imag.fr/CASYS/LOGICIELS/givaro])
 AC_CONFIG_MACRO_DIR([macros])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([1.8 gnu no-dependencies -Wall -Wno-portability])
-AC_CONFIG_HEADERS([config.h])
+AM_CONFIG_HEADER([config.h])
 AX_PREFIX_CONFIG_H(givaro-config.h, __GIVARO)
 AC_PATH_PROG(RM, rm, $FALSE)
 RM="$RM -f"
@@ -83,32 +83,12 @@ if test "x$WARN" = "xyes" -o "x$WARN" = "xfull" ; then
 		xeko)
 			WARN_CFLAGS="${WARN_CFLAGS} -Wno-unused-parameter"
 			;;
-		xgcc)
+		xgcc|xclang)
 			WARN_CFLAGS="${WARN_CFLAGS} -Wextra -Wno-unused-parameter"
 			if test "x${WARN}" = "xfull" ; then
 				WARN_CFLAGS="${WARN_CFLAGS} -Wuninitialized -Wconversion -Wcast-qual -ansi -pedantic -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Wno-long-long"
 			fi
 		;;
-		xgcc48)
-			WARN_CFLAGS="${WARN_CFLAGS} -Wextra -Wno-unused-parameter"
-			if test "x${WARN}" = "xfull" ; then
-				WARN_CFLAGS="${WARN_CFLAGS} -Wuninitialized -Wconversion -Wcast-qual -ansi -pedantic -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Wno-long-long -fsanitize=address"
-			fi
-			;;
-
-		xclang)
-			WARN_CFLAGS="${WARN_CFLAGS} -Wextra -Wno-unused-parameter"
-			if test "x${WARN}" = "xfull" ; then
-				WARN_CFLAGS="${WARN_CFLAGS} -Wuninitialized -Wconversion -Wcast-qual -pedantic -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Wno-long-long"
-			fi
-			;;
-		xclang31)
-			WARN_CFLAGS="${WARN_CFLAGS} -Wextra -Wno-unused-parameter"
-			if test "x${WARN}" = "xfull" ; then
-				WARN_CFLAGS="${WARN_CFLAGS} -Wuninitialized -Wconversion -Wcast-qual -pedantic -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Wno-long-long -fsanitize=address"
-			fi
-			;;
-
 		*)
 			echo
 			echo "*******************************************************"
