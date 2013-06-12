@@ -35,10 +35,8 @@ namespace Givaro {
 	/*! @brief This class implements the standard arithmetic with Modulo Elements.
 	 *   Reduction is made through Montgomery's reduction.
 	 *   Representation of a is by storing (aB).
-	 *   - We must have gcd(p,2)=1
+	 *   - We must have p>2
 	 *   - We must have \f$(p-1)^2 + p(B-1) < B^2 \f$, i.e. \f$2<p \leq 40504\f$ for \f$B=2^16\f$.
-     *   - m max is 40503
-     *   - p max is 40499
 	 */
 	template<>
 	class Montgomery<Std32> {
@@ -51,7 +49,7 @@ namespace Givaro {
 		typedef uint32_t Element;
 
 		// ----- Constructor
-		Montgomery() : _p(0UL), _dp(0.0), zero(0UL), one(1UL), mOne(0UL) {}
+		Montgomery() : _p(0UL), _dp(0.0), zero(0UL), one(1UL), mOne(_p-one) {}
 
 		Montgomery( Residu_t p, int = 1) :
 			_p(  (Residu_t)  p),
@@ -246,9 +244,6 @@ namespace Givaro {
 					const Rep zero;
 					const Rep one;
 					const Rep mOne;
-
-    public: static inline Residu_t getMaxModulus() { return 40503; }
-    
 	};
 
 

@@ -5,7 +5,7 @@
 // and abiding by the rules of distribution of free software.
 // see the COPYRIGHT file for more details.
 // -----------------------------------------------------------------
-// Time-stamp: <10 Oct 12 16:04:17 Jean-Guillaume.Dumas@imag.fr>
+// Time-stamp: <19 Dec 06 10:55:08 Jean-Guillaume.Dumas@imag.fr>
 // -----------------------------------------------------------------
 // author: Jean-Guillaume.Dumas
 // date: 2004
@@ -25,10 +25,8 @@
 namespace Givaro {
 
 	//! Static Element
-template <class DomainStyle>
-struct StaticElement {
-    typedef DomainStyle Domain;
-protected:
+template <class Domain>
+class StaticElement {
     static Domain _domain;
     typedef typename Domain::Element Rep;
     Rep _elem;
@@ -141,30 +139,12 @@ public:
         _domain.subin((_elem), e._elem); return *this;
     }
 
-    inline StaticElement& operator-- () {
-        _domain.subin(this->_elem, _domain.one); return *this;
-    }
-
-    inline StaticElement& operator++ () {
-        _domain.addin(this->_elem, _domain.one); return *this;
-    }
-
-    inline StaticElement operator-- (int) {
-        StaticElement tmp(*this);
-        _domain.subin(this->_elem, _domain.one); return tmp;
-    }
-
-    inline StaticElement operator++ (int) {
-        StaticElement tmp(*this);
-        _domain.addin(this->_elem, _domain.one); return tmp;
-    }
-
     friend inline std::istream& operator>> (std::istream& i, StaticElement& a) {
         return _domain.read(i,(a._elem));
     }
 
 
-    friend inline std::ostream& operator<< (std::ostream& o, const StaticElement& a) {
+    friend inline std::ostream& operator<< (std::ostream& o, const StaticElement a) {
         return _domain.write(o,(a._elem));
     }
 

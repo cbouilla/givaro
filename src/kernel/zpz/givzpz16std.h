@@ -63,8 +63,6 @@ namespace Givaro {
 
 /*! @brief This class implement the standard arithmetic with Modulo Elements.
  * - The representation of an integer a in Zpz is the value a % p
- * - m max is 32768
- * - p max is 32749
  * .
  */
 template<>
@@ -74,8 +72,8 @@ public:
 	typedef uint16_t Residu_t;                    // - type to store residue
 	enum { size_rep = sizeof(Residu_t) };      // - size of the storage type
 	// ----- Representation of Element of the domain ZpzDom
-	typedef uint16_t Rep;
-	typedef uint16_t Element;
+	typedef int16_t Rep;
+	typedef int16_t Element;
 
 	// ----- Representation of vector of the Element
 	typedef Rep* Array;
@@ -87,7 +85,7 @@ public:
 	const Rep mOne;
 
 	// ----- Constructor
-	ZpzDom() : zero(0), one(1), mOne((Rep)-1), _p(0) {}
+	ZpzDom() : zero(0), one(1), mOne(-1), _p(0) {}
 	ZpzDom( Residu_t p ) : zero(0), one(1), mOne(Rep(p-1)), _p(p) {}
 	ZpzDom( const ZpzDom<Std16>& F) : zero(F.zero), one(F.one), mOne(F.mOne), _p(F._p) {}
 
@@ -247,9 +245,6 @@ protected:
 
 	static void Init();
 	static void End();
-
-public: static inline Residu_t getMaxModulus() { return 32768; }
-
 };
 
 } // namespace Givaro

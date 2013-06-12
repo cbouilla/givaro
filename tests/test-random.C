@@ -29,20 +29,6 @@ int test1()
         toto.random();
 #endif
 
-	toto.seeding();
-#ifdef GIVARO_DEBUG
-	cout << "this is a random() number : " << toto.random() << endl;
-#else
-        toto.random();
-#endif
-
-    Integer::seeding();
-#ifdef GIVARO_DEBUG
-	cout << "this is a random() number : " << toto.random() << endl;
-#else
-        toto.random();
-#endif
-
 	Integer un(26);
 	Integer autre(511);
 	Integer large( Integer::one<<3000);
@@ -143,8 +129,8 @@ int test1()
 	for (size_t i = 0 ; i < 5000 ; ++i) {
 		Integer tata = toto.nonzerorandom(autre);
 		if (tata == 0 || tata >= autre) {
-			       cout << tata << endl;
-			cout << tata << "nonzerorandom  failed" << endl;
+			//        cout << tata << endl;
+			cout << "nonzerorandom  failed" << endl;
 			return -1  ;
 		}
 	}
@@ -417,7 +403,7 @@ int test4()
 		Integer::nonzerorandom<false>(tata,petits);
 		if (tata<0) count ++ ;
 		if (tata == 0 || tata >= 1<<petits) {
-//             cout << tata << endl;
+			//        cout << tata << endl;
 			cout << "nonzerorandom  failed" << endl;
 			return -1  ;
 		}
@@ -430,14 +416,13 @@ int test4()
 #ifdef GIVARO_DEBUG
 	cout << "nonzerorandom_exp....OK" << endl;
 #endif
-    if (autre<0) Integer::negin(autre);
-
 
 	count = 0 ;
 	for (size_t i = 0 ; i < 5000 ; ++i) {
 		Integer::nonzerorandom<false>(tata,autre);
 		if (tata<0) ++ count ;
-		if (tata == 0 || tata >= autre || (-tata) >= autre) {
+		if (tata == 0 || tata >= autre) {
+			//        cout << tata << endl;
 			cout << "nonzerorandom  failed" << endl;
 			return -1  ;
 		}
@@ -502,7 +487,7 @@ int test5()
 		tata = Integer::random<false>(l) ;
 		if (tata<0) ++ count ;
 		if (tata.bitsize() > l) {
-			// cout << tata << endl;
+			//cout << tata << endl;
 			cout << "random  failed" << endl;
 			return -1  ;
 		}
@@ -515,7 +500,7 @@ int test5()
 	for (size_t i = 0 ; i < 5000 ; ++i) {
 		tata = Integer::random(l) ;
 		if (tata<0 || tata.bitsize() > l) {
-			// cout << tata << endl;
+			//cout << tata << endl;
 			cout << "random  failed" << endl;
 			return -1  ;
 		}

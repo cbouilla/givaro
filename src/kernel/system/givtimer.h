@@ -26,7 +26,6 @@
 #define __GIVARO_timer_H
 
 #include <iostream>
-#include <givaro/givconfig.h>
 namespace Givaro {
 // class BaseTimer; class RealTimer; class SysTimer; class UserTimer;
 
@@ -230,12 +229,9 @@ inline std::ostream &operator << (std::ostream &o, const Timer &T)
 	if (ut < 0.0000000001) ut = 0;
 	return o << T.realtime() << "s (" << ut << " cpu) [" << T.count() << "]";
 }
-}
 
-#ifdef GIVARO_USES_OMP
+#if defined(_OPENMP) || defined(OMP_H) || defined(__OMP_H)
 #include <omp.h>
-
-namespace Givaro {
 //! OMP timer
 struct OMPTimer {
 	double _c;
@@ -262,9 +258,9 @@ struct OMPTimer {
 	}
 	OMPTimer  operator -() { OMPTimer r; r._c = - _c; return r; }
 };
-} // namespace Givaro
-#endif // OMP
+#endif
 
+} // namespace Givaro
 
 #endif // __GIVARO_timer_H
 // vim:sts=8:sw=8:ts=8:noet:sr:cino=>s,f0,{0,g0,(0,\:0,t0,+0,=s
