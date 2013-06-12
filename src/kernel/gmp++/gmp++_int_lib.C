@@ -8,9 +8,6 @@
 // Authors: B Boyer
 // $Id: gmp++_int_lib.C,v 1.4 2009-09-17 14:28:22 jgdumas Exp $
 // ==========================================================================
-/** @file gmp++/gmp++_int_lib.C
- * libing stuff.
- */
 
 
 #ifndef __GMPplusplus_LIB_C__
@@ -21,8 +18,7 @@ namespace Givaro
 	//------------------------------------- predefined null and one
 	const Integer Integer::zero(0UL);
 	const Integer Integer::one(1UL);
-	const Integer Integer::mOne(-1L);
-
+	const Integer Integer::mone(-1L);
 } // Givaro
 #endif
 

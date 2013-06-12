@@ -9,7 +9,7 @@
 // $Id: gmp++_int_compare.C,v 1.6 2009-09-17 14:28:22 jgdumas Exp $
 // ==========================================================================
 
-/*! @file gmp++/gmp++_rat_compare.C
+/*! @file givaro/gmp++_int_compare.C
  * @brief routines to compare integers.
  */
 
@@ -48,23 +48,23 @@ namespace Givaro {
 		return mpz_cmp_si ( (mpz_srcptr)&gmp_rep, l ) != 0;
 	}
 
-	int Integer::operator != (const long int l) const
+	int Integer::operator != (const long l) const
 	{
 		return mpz_cmp_si ( (mpz_srcptr)&gmp_rep, l ) != 0;
 	}
 
-	//long unsigned ops added by Dan Roche, 6-26-04
-	int Integer::operator != (const long unsigned int l) const
+	//unsigned long ops added by Dan Roche, 6-26-04
+	int Integer::operator != (const unsigned long l) const
 	{
 		return mpz_cmp_ui ( (mpz_srcptr)&gmp_rep, l ) != 0;
 	}
 
-	int Integer::operator > (const long unsigned int l) const
+	int Integer::operator > (const unsigned long l) const
 	{
 		return mpz_cmp_ui((mpz_srcptr)&gmp_rep, l) > 0;
 	}
 
-	int Integer::operator < (const long unsigned int l) const
+	int Integer::operator < (const unsigned long l) const
 	{
 		return mpz_cmp_ui((mpz_srcptr)&gmp_rep, l) < 0;
 	}
@@ -74,7 +74,7 @@ namespace Givaro {
 		return mpz_cmp_si((mpz_srcptr)&gmp_rep, l) > 0;
 	}
 
-	int Integer::operator > (const long int l) const
+	int Integer::operator > (const long l) const
 	{
 		return mpz_cmp_si((mpz_srcptr)&gmp_rep, l) > 0;
 	}
@@ -84,7 +84,7 @@ namespace Givaro {
 		return mpz_cmp_si((mpz_srcptr)&gmp_rep, l) < 0;
 	}
 
-	int Integer::operator < (const long int l) const
+	int Integer::operator < (const long l) const
 	{
 		return mpz_cmp_si((mpz_srcptr)&gmp_rep, l) < 0;
 	}

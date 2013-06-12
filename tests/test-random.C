@@ -29,23 +29,8 @@ int test1()
         toto.random();
 #endif
 
-	toto.seeding();
-#ifdef GIVARO_DEBUG
-	cout << "this is a random() number : " << toto.random() << endl;
-#else
-        toto.random();
-#endif
-
-    Integer::seeding();
-#ifdef GIVARO_DEBUG
-	cout << "this is a random() number : " << toto.random() << endl;
-#else
-        toto.random();
-#endif
-
 	Integer un(26);
 	Integer autre(511);
-	Integer large( Integer::one<<3000);
 #ifdef GIVARO_DEBUG
 	cout << "random...............OK" << endl;
 #endif
@@ -63,7 +48,6 @@ int test1()
 
 	unsigned long trois = 3 ;
 	unsigned long petits = 6 ;
-	unsigned long grands = 300 ;
 	//std::vector<int> T(1<<petits) ;
 
 	for (size_t i = 0 ; i < 5000 ; ++i) {
@@ -105,30 +89,6 @@ int test1()
 #endif
 
 	for (size_t i = 0 ; i < 5000 ; ++i) {
-		Integer tata = toto.random_lessthan_2exp(grands);
-		if ( tata.bitsize() > grands ) {
-			//        cout << tata << endl;
-			cout << "random_lessthan_2exp  failed" << endl;
-			return -1  ;
-		}
-	}
-#ifdef GIVARO_DEBUG
-	cout << "random_lessthan_2exp.....OK" << endl;
-#endif
-
-	for (size_t i = 0 ; i < 5000 ; ++i) {
-		Integer tata = toto.random_lessthan(large);
-		//        cout << tata << endl;
-		if ( tata.bitsize() > large.bitsize() ){
-			cout << "random_lessthan  failed" << endl;
-			return -1  ;
-		}
-	}
-#ifdef GIVARO_DEBUG
-	cout << "random_lessthan.........OK" << endl;
-#endif
-
-	for (size_t i = 0 ; i < 5000 ; ++i) {
 		Integer tata = toto.nonzerorandom(petits);
 		if (tata == 0 || tata >= 1<<petits) {
 			//        cout << tata << endl;
@@ -143,8 +103,8 @@ int test1()
 	for (size_t i = 0 ; i < 5000 ; ++i) {
 		Integer tata = toto.nonzerorandom(autre);
 		if (tata == 0 || tata >= autre) {
-			       cout << tata << endl;
-			cout << tata << "nonzerorandom  failed" << endl;
+			//        cout << tata << endl;
+			cout << "nonzerorandom  failed" << endl;
 			return -1  ;
 		}
 	}
@@ -156,7 +116,7 @@ int test1()
 
 }/*}}}*/
 
-//! tests \verbatim ret= ::func(arg,arg); \endverbatim
+//! tests <code>ret= ::func(arg,arg);</code>
 int test2()
 {/*{{{*/
 	Integer un(26);
@@ -243,7 +203,7 @@ int test2()
 
 }/*}}}*/
 
-//! tests \verbatim ::func(ret,arg,arg); \endverbatim
+//! tests <code>::func(ret,arg,arg);</code>
 int test3()
 {/*{{{*/
 	Integer un(26);
@@ -417,7 +377,7 @@ int test4()
 		Integer::nonzerorandom<false>(tata,petits);
 		if (tata<0) count ++ ;
 		if (tata == 0 || tata >= 1<<petits) {
-//             cout << tata << endl;
+			//        cout << tata << endl;
 			cout << "nonzerorandom  failed" << endl;
 			return -1  ;
 		}
@@ -430,14 +390,13 @@ int test4()
 #ifdef GIVARO_DEBUG
 	cout << "nonzerorandom_exp....OK" << endl;
 #endif
-    if (autre<0) Integer::negin(autre);
-
 
 	count = 0 ;
 	for (size_t i = 0 ; i < 5000 ; ++i) {
 		Integer::nonzerorandom<false>(tata,autre);
 		if (tata<0) ++ count ;
-		if (tata == 0 || tata >= autre || (-tata) >= autre) {
+		if (tata == 0 || tata >= autre) {
+			//        cout << tata << endl;
 			cout << "nonzerorandom  failed" << endl;
 			return -1  ;
 		}
@@ -502,7 +461,7 @@ int test5()
 		tata = Integer::random<false>(l) ;
 		if (tata<0) ++ count ;
 		if (tata.bitsize() > l) {
-			// cout << tata << endl;
+			//cout << tata << endl;
 			cout << "random  failed" << endl;
 			return -1  ;
 		}
@@ -515,7 +474,7 @@ int test5()
 	for (size_t i = 0 ; i < 5000 ; ++i) {
 		tata = Integer::random(l) ;
 		if (tata<0 || tata.bitsize() > l) {
-			// cout << tata << endl;
+			//cout << tata << endl;
 			cout << "random  failed" << endl;
 			return -1  ;
 		}

@@ -8,10 +8,6 @@
 // Authors: T. Gautier
 // $Id: givmodule.h,v 1.4 2011-02-02 16:23:56 bboyer Exp $
 // ==========================================================================
-/** @file givmodule.h
- * @ingroup system
- * @brief NO DOC
- */
 #ifndef __GIVARO_module_init_H
 #define __GIVARO_module_init_H
 
@@ -22,16 +18,15 @@ namespace Givaro {
 class GivModule;
 
 
-//! GivaroNoInit.
-/**
- * Purpose: used to delay construction of object in the init function
- of a module definition.
- */
+// ----------------------------------------------------------- GivaroNoInit:
+// Purpose: used to delay construction of object in the init function
+// of a module definition.
+
 class GivaroNoInit {};
 
 
-//! InitAfter.
-//! Purpose: define a precedence relation between two modules.
+// -------------------------------------------------------------- InitAfter:
+// Purpose: define a precedence relation between two modules.
 
 class InitAfter {
 public:
@@ -48,9 +43,9 @@ private:
 };
 
 
-//! GivModule.
-//! Purpose: definition of module with precedence relation use to initialize
-//! them between different units compilation.
+// -------------------------------------------------------------- GivModule:
+// Purpose: definition of module with precedence relation use to initialize
+// them between different units compilation.
 
 class GivModule {
 public:
@@ -90,9 +85,9 @@ static void SortGivModule();
 };
 
 
-//! GivModule.
-//! Purpose: definition of object to be initialized after all modules
-//! initialization
+// -------------------------------------------------------------- GivModule:
+// Purpose: definition of object to be initialized after all modules
+// initialization
 
 class ObjectInit {
 public:
@@ -108,4 +103,3 @@ private:
 
 } // namespace Givaro
 #endif // __GIVARO_module_init_H
-// vim:sts=8:sw=8:ts=8:noet:sr:cino=>s,f0,{0,g0,(0,\:0,t0,+0,=s

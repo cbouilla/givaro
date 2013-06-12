@@ -4,20 +4,13 @@
 // Givaro is governed by the CeCILL-B license under French law
 // and abiding by the rules of distribution of free software.
 // see the COPYRIGHT file for more details.
+// Givaro : Prime numbers
+//              Modular powering,
+//              Fermat numbers,
+//              Primality tests, Factorization :
+//                      (There are parameters to fix)
 // Time-stamp: <06 Jun 06 14:48:16 Jean-Guillaume.Dumas@imag.fr>
 // =================================================================== //
-
-
-/*! @file givintprime.h
- * @ingroup integers
- * @brief primes
- * - Prime numbers
- * - Modular powering,
- * - Fermat numbers,
- * - Primality tests
- * - Factorization : (There are parameters to fix)
- * .
- */
 #ifndef __GIVARO_integers_prime_H
 #define __GIVARO_integers_prime_H
 
@@ -30,7 +23,7 @@
 namespace Givaro {
 
 	// =================================================================== //
-	//! Fermat numbers
+	// Fermat numbers
 	// =================================================================== //
 	class FermatDom : public IntegerDom {
 	public:
@@ -58,7 +51,7 @@ namespace Givaro {
 #define BOUNDARY_2_isprime TABMAX2
 
 	// =================================================================== //
-	//! Primality tests
+	// Primality tests
 	// =================================================================== //
 	class IntPrimeDom : public IntegerDom {
 	public:

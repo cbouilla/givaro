@@ -13,9 +13,7 @@
 #ifndef __GIVARO_trunc_domain_H
 #define __GIVARO_trunc_domain_H
 #include <givaro/givpoly1dense.h>
-#ifndef __PATHCC__
 #include <bits/stl_pair.h>
-#endif
 
 
 namespace Givaro {
@@ -36,22 +34,22 @@ public :
 	typedef          Storage_t                Element;
 
 
-	Storage_t zero, one,mOne;
+	Storage_t zero, one,mone;
 
 	TruncDom (const Domain& d, const Indeter& X = Indeter() ) : Father_t(d,X) {
 		this->assign(zero,Father_t::zero);
 		this->assign(one,Father_t::one);
-		this->assign(mOne,Father_t::mOne);
+		this->assign(mone,Father_t::mone);
 	}
 	TruncDom (const Self_t& t) : Father_t(static_cast<const Father_t&>(t)) {
 		this->assign(zero,Father_t::zero);
 		this->assign(one,Father_t::one);
-		this->assign(mOne,Father_t::mOne);
+		this->assign(mone,Father_t::mone);
 	}
 	TruncDom (const Father_t& t) : Father_t(t) {
 		this->assign(zero,Father_t::zero);
 		this->assign(one,Father_t::one);
-		this->assign(mOne,Father_t::mOne);
+		this->assign(mone,Father_t::mone);
 	}
 
     	const Father_t& getpoldomain() const
@@ -231,7 +229,7 @@ public :
 	{
 		Degree vP; val(vP, P);
 		if (vP > d) {
-			P.first.insert(P.first.begin(),(size_t)value(vP-d),this->_domain.zero);
+			P.first.insert(P.first.begin(),value(vP-d),this->_domain.zero);
 			P.second = d;
 		}
 		return P;
@@ -384,7 +382,7 @@ public :
 	Rep& random(GivRandom& g, Rep& r, Degree s) const
 	{
 		Father_t::random(g,r.first,s);
-		r.second = (Degree)(long)((unsigned long)g() % (unsigned long)((s.value()<<1)|1));
+		r.second = g() % ((s.value()<<1)|1);
 		return r;
 	}
 	// -- Random dense polynomial with same size as b.

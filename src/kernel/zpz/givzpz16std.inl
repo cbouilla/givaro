@@ -21,8 +21,8 @@
 #define __GIVARO_ZPZ16_N_SUB(r,p,a,b) ( r = Rep(a>=b? a-b: (p-b)+a) )
 
 // r -= a
-// #define __GIVARO_ZPZ16_N_SUBIN(r,p,a) { r = Rep(r-a); r= Rep(r < 0 ? r+p : r);}
-#define __GIVARO_ZPZ16_N_SUBIN(r,p,a) { r = Rep(r>=a?r-a:(p-a)+r);}
+#define __GIVARO_ZPZ16_N_SUBIN(r,p,a) { r = Rep(r-a); r= Rep(r < 0 ? r+p : r);}
+
 // r = a+b
 #define __GIVARO_ZPZ16_N_ADD(r,p,a,b) { r = Rep(a+b); r= Rep(r < p ? r : r-p);}
 // r += a
@@ -71,7 +71,6 @@ namespace Givaro {
 
 	inline ZpzDom<Std16>::Rep& ZpzDom<Std16>::sub (Rep& r, const Rep a, const Rep b) const
 	{
-
 		return __GIVARO_ZPZ16_N_SUB(r,_p,a,b);
 	}
 
@@ -452,19 +451,19 @@ namespace Givaro {
 		unsigned int stride = 1;
 		if ((unsigned long)bound < GIVARO_MAXUINT16)
 			stride = (unsigned int) (GIVARO_MAXULONG/((unsigned long)bound * (unsigned long)bound));
-		unsigned long dot = (unsigned long)zero;
+		unsigned long dot = zero;
 		if ((sz <10) && (sz <stride)) {
 			for(  size_t i= sz; i--; )
-				dot += (unsigned long)a[i] * (unsigned long)b[i];
+				dot += a[i] * b[i];
 			if (dot > _p) r = (Rep)(dot % (uint16_t)_p);
 			else r = (Rep)dot;
 			return;
 		}
 		unsigned int i_begin=0;
-		stride &= (unsigned int)~0x1;
+		stride &= ~0x1;
 		if (stride ==0) {
 			for(  size_t i = sz; i--; ) {
-				dot += (unsigned long)a[i] * (unsigned long)b[i];
+				dot += a[i] * b[i];
 				if (dot>_p) dot %= _p;
 			}
 			r = (Rep)dot;
@@ -475,13 +474,13 @@ namespace Givaro {
 			if ((min_sz & 0x1) !=0) {
 				min_sz--;
 				i_begin++;
-				dot += (unsigned long)a++[min_sz] * (unsigned long)b++[min_sz];
+				dot += a++[min_sz] * b++[min_sz];
 			}
 			if (min_sz > 1)
 				for(  size_t i= min_sz; i>0; --i, --i, ++a, ++a, ++b, ++b )
 				{
-					dot += (unsigned long)a[0] * (unsigned long)b[0];
-					dot += (unsigned long)a[1] * (unsigned long)b[1];
+					dot += a[0] * b[0];
+					dot += a[1] * b[1];
 				}
 			if (dot>_p) dot %= (uint16_t)_p;
 			i_begin += (unsigned int) min_sz;
@@ -565,9 +564,8 @@ namespace Givaro {
 
 	inline std::istream& ZpzDom<Std16>::read (std::istream& s, Rep& a) const
 	{
-        	Integer tmp;
-		s >> tmp;
-		init(a, tmp);
+		s >> a;
+		init(a, a);
 		return s;
 	}
 

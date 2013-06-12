@@ -8,10 +8,7 @@
 // Authors: T. Gautier
 // $Id: givconfig.h,v 1.22 2011-02-04 14:50:07 bboyer Exp $
 // ==========================================================================
-/** @file givconfig.h
- * @ingroup system
- * @brief configuration file for Givaro
- */
+// Description: configuration file for Givaro
 #ifndef _GIVARO_INTERNAL_CONFIG_H_
 #define _GIVARO_INTERNAL_CONFIG_H_ 1
 
@@ -65,9 +62,9 @@
 // - yy: minor version number
 // - zz: revision number
 #define GIVARO_MAJOR_VERSION    3
-#define GIVARO_MINOR_VERSION    7
-#define GIVARO_REVISION_VERSION 2
-#define GIVARO_VERSION          30702
+#define GIVARO_MINOR_VERSION    5
+#define GIVARO_REVISION_VERSION 0
+#define GIVARO_VERSION          30500
 
 // -- Defines this value both to compile the library of user program
 // value: integer that defines debug level trace information (not well defined)
@@ -84,66 +81,50 @@
 #define __STDC_LIMIT_MACROS
 #endif
 #include <stdint.h>
-#if !defined(INT64_MAX)
-#if !defined(__CYGWIN__)
+#ifndef INT64_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define INT64_MAX std::numeric_limits<int64_t>::max()
 #endif
 
-#if !defined(UINT64_MAX)
-#if !defined(__CYGWIN__)
+#ifndef UINT64_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define UINT64_MAX std::numeric_limits<uint64_t>::max()
 #endif
 
-#if !defined(INT32_MAX)
-#if !defined(__CYGWIN__)
+#ifndef INT32_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define INT32_MAX std::numeric_limits<int32_t>::max()
 #endif
 
-#if !defined(UINT32_MAX)
-#if !defined(__CYGWIN__)
+#ifndef UINT32_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define UINT32_MAX std::numeric_limits<uint32_t>::max()
 #endif
 
-#if !defined(INT16_MAX)
-#if !defined(__CYGWIN__)
+#ifndef INT16_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define INT16_MAX std::numeric_limits<int16_t>::max()
 #endif
 
-#if !defined(UINT16_MAX)
-#if !defined(__CYGWIN__)
+#ifndef UINT16_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define UINT16_MAX std::numeric_limits<uint16_t>::max()
 #endif
 
-#if !defined(INT8_MAX)
-#if !defined(__CYGWIN__)
+#ifndef INT8_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define INT8_MAX std::numeric_limits<int8_t>::max()
 #endif
 
-#if !defined(UINT8_MAX)
-#if !defined(__CYGWIN__)
+#ifndef UINT8_MAX
 #pragma message "#warning somebody nasty previously included <stdint.h> without __STDC_LIMIT_MACROS :)"
-#endif
 #include <limits>
 #define UINT8_MAX std::numeric_limits<uint8_t>::max()
 #endif
@@ -157,7 +138,6 @@
 # define GIVARO_BITS_PER_SHORTINT	SIZEOF_SHORT
 # define GIVARO_BITS_PER_CHAR		SIZEOF_CHAR
 
-#if 0 /*  standard types should be used */
 #ifndef __GIVARO_HAVE_STDINT_H
 typedef signed    __GIVARO_INT8      int8_t;
 typedef signed    __GIVARO_INT16     int16_t;
@@ -174,7 +154,6 @@ typedef unsigned  __GIVARO_INT64     uint64_t;
 #   undef GIVARO_USE_SIXTYFOUR
 #   define GIVARO_DONOTUSE_SIXTYFOUR 1
 # endif
-#endif
 #endif
 
 
@@ -335,7 +314,7 @@ template<class XXX> struct GIVARO_numeric_limits {
 #  endif
 #endif
 
-//! @bug why not use numeric limits from stl ?
+
 template<> inline float GIVARO_numeric_limits<float>::max() { return FLT_MAX; }
 template<> inline double GIVARO_numeric_limits<double>::max() { return DBL_MAX; }
 template<> inline short GIVARO_numeric_limits<short>::max() { return SHRT_MAX; }
@@ -424,14 +403,4 @@ template<> struct Signed_Trait<unsigned long>  : public GIVARO_numeric_limits<un
   };
   #endif
 
-
-
-#if defined(_OPENMP) || defined(OMP_H) || defined(__OMP_H) || defined(__pmp_omp_h)
-#define GIVAVO_USES_OMP 1
-#else
-#undef GIVAVO_USES_OMP
 #endif
-
-
-#endif
-// vim:sts=8:sw=8:ts=8:noet:sr:cino=>s,f0,{0,g0,(0,\:0,t0,+0,=s

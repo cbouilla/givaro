@@ -9,9 +9,9 @@
 // $Id: givzpz64std.h,v 1.21 2011-02-04 14:11:46 jgdumas Exp $
 // ==========================================================================
 
-/*! @file givzpz64std.h
+/*! @file zpz/givzpz64std.h
  * @ingroup zpz
- * @brief Zpz on 64bit words
+ * @brief Description.
  *   Arithmetic on Z/pZ, with p a prime number less than 2^64
  *   Modulo typedef is a signed long number. In case it was modified
  *   then Bézout algorithm must be changed (coefficient can be negative).
@@ -29,10 +29,10 @@ namespace Givaro {
 
 /*! @brief This class implement the standard arithmetic with Modulo Elements.
  * - The representation of an integer a in Zpz is the value a % p
- * - m max is 3037000500
- * - p max is 3037000493
+ * - p max is 2147483647
  * .
  */
+
 template<>
 class ZpzDom<Std64>
 {
@@ -54,20 +54,18 @@ public:
 	// ----- Constantes
 	const Rep zero;
 	const Rep one;
-	const Rep mOne;
+	const Rep mone;
 
 	// ----- Constructor
-	ZpzDom() :
-		zero(0), one(1), mOne(-1), _p(0) {}
-	ZpzDom( Residu_t p, unsigned long = 1) :
-	       	zero(0), one(1), mOne((Rep)p-1), _p(p) {}
+	ZpzDom() : zero(0), one(1), mone(-1), _p(0) {}
+	ZpzDom( Residu_t p, unsigned long = 1) : zero(0), one(1), mone(p-1), _p(p) {}
 
 
 	Self_t& operator= (const Self_t& D)
 	{
 	  assign(const_cast<Element&>(one),D.one);
 	  assign(const_cast<Element&>(zero),D.zero);
-	  assign(const_cast<Element&>(mOne),D.mOne);
+	  assign(const_cast<Element&>(mone),D.mone);
 
 
 		this->_p = D._p;
@@ -84,7 +82,6 @@ public:
 	Residu_t residu() const;
 	Residu_t size() const { return _p; }
 	Residu_t characteristic() const { return _p; }
-	Residu_t& characteristic(Residu_t& p) const { return p=_p; }
 	Integer& characteristic(Integer& p) const { return p=_p; }
 	Residu_t cardinality() const { return _p; }
 	Rep access( const Rep a ) const { return a; }
@@ -220,9 +217,6 @@ protected:
 
 	static void Init();
 	static void End();
-
-public: static inline Residu_t getMaxModulus() { return 3037000500ULL; }
-    
 };
 
 } // namespace Givaro

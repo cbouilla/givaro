@@ -8,7 +8,7 @@
 // $Id: givmontg32.h,v 1.15 2011-02-04 14:11:46 jgdumas Exp $
 // ==========================================================================
 
-/*! @file givmontg32.h
+/*! @file zpz/givmontg32.h
  * @ingroup zpz
  * @brief NO DOC
  */
@@ -35,10 +35,8 @@ namespace Givaro {
 	/*! @brief This class implements the standard arithmetic with Modulo Elements.
 	 *   Reduction is made through Montgomery's reduction.
 	 *   Representation of a is by storing (aB).
-	 *   - We must have gcd(p,2)=1
+	 *   - We must have p>2
 	 *   - We must have \f$(p-1)^2 + p(B-1) < B^2 \f$, i.e. \f$2<p \leq 40504\f$ for \f$B=2^16\f$.
-     *   - m max is 40503
-     *   - p max is 40499
 	 */
 	template<>
 	class Montgomery<Std32> {
@@ -51,22 +49,22 @@ namespace Givaro {
 		typedef uint32_t Element;
 
 		// ----- Constructor
-		Montgomery() : _p(0UL), _dp(0.0), zero(0UL), one(1UL), mOne(0UL) {}
+		Montgomery() : _p(0UL), _dp(0.0), zero(0UL), one(1UL), mone(_p-one) {}
 
 		Montgomery( Residu_t p, int = 1) :
 			_p(  (Residu_t)  p),
 			_Bp( (Residu_t)  B32%p),
 			_B2p((Residu_t)  (_Bp<<HALF_BITS32) % p),
 			_B3p((Residu_t)  (_B2p<<HALF_BITS32) % p),
-			_nim((Residu_t)  -Montgomery<Std32>::invext((int32_t)_p,B32) ),
+			_nim((Residu_t)  -Montgomery<Std32>::invext(_p,B32) ),
 			_dp( (double)    p),
 			zero((Residu_t)  0UL),
 			one( (Residu_t)  redcsal( _B2p ) ),
-			mOne( _p - one )
+			mone( _p - one )
 		{}
 
 		Montgomery( const Montgomery<Std32>& F)
-		: _p(F._p), _Bp(F._Bp), _B2p( F._B2p), _B3p( F._B3p), _nim(F._nim),_dp(F._dp), zero(0UL), one(F.one),mOne(F.mOne)
+		: _p(F._p), _Bp(F._Bp), _B2p( F._B2p), _B3p( F._B3p), _nim(F._nim),_dp(F._dp), zero(0UL), one(F.one),mone(F.mone)
 		{ }
 
 
@@ -84,7 +82,7 @@ namespace Givaro {
 			this->_nim = F._nim;
 			this->_dp = F._dp;
 			assign(const_cast<Element&>(one),F.one);
-			assign(const_cast<Element&>(mOne),F.mOne);
+			assign(const_cast<Element&>(mone),F.mone);
 			assign(const_cast<Element&>(zero),F.zero);
 			return *this;
 		}
@@ -245,10 +243,7 @@ namespace Givaro {
 					// ----- Constantes
 					const Rep zero;
 					const Rep one;
-					const Rep mOne;
-
-    public: static inline Residu_t getMaxModulus() { return 40503; }
-    
+					const Rep mone;
 	};
 
 

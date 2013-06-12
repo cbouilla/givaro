@@ -36,7 +36,7 @@ namespace Givaro {
 	inline bool Poly1FactorDom<Domain,Tag, RandIter>::find_irred_binomial (Element& R, Degree n, Residue MOD) const
 	{
 		for(Residue a=0; a<MOD; ++a) {
-			_domain.assign(R[0],(Type_t)a);
+			_domain.assign(R[0],a);
 			if (is_irreducible(R))
 				return true;
 		}
@@ -55,7 +55,7 @@ namespace Givaro {
 	inline bool Poly1FactorDom<Domain,Tag, RandIter>::find_irred_binomial (Element& R, Degree n, Residue MOD, Element IXE) const
 	{
 		for(Residu_t a=0; a<MOD; ++a) {
-			_domain.assign(R[0],static_cast<Element_t>(a));
+			_domain.assign(R[0],a);
 			if (is_irreducible(R) && (is_prim_root(IXE,R) ))
 				return true;
 		}
@@ -76,7 +76,7 @@ namespace Givaro {
 	inline bool Poly1FactorDom<Domain,Tag, RandIter>::find_irred_binomial2 (Element& R, Degree n, Residue MOD, Element IXE) const
 	{
 		for(Residu_t a=0; a<MOD; ++a) {
-			_domain.assign(R[0],(Element_t)a);
+			_domain.assign(R[0],a);
 			if (is_irreducible2(R) && (is_prim_root(IXE,R) ))
 				return true;
 		}
@@ -102,16 +102,16 @@ namespace Givaro {
 
 		for(long d=1;d<=(n.value()/2);++d) {
 			for(Residu_t b=0; b<MOD; ++b) {
-				_domain.assign(R[(size_t)d],(Type_t)b);
+				_domain.assign(R[d],b);
 				for(Residu_t a=1; a<MOD; ++a) {
-					_domain.assign(R[0],(Type_t)a);
+					_domain.assign(R[0],a);
 					if (is_irreducible(R))
 						return true;
 				}
 			}
 			// _domain.assign(R[0],_domain.zero);
 			// JGD 21.10.02
-			_domain.assign(R[(size_t)d],_domain.zero);
+			_domain.assign(R[d],_domain.zero);
 		}
 		return false ;
 	}
@@ -123,10 +123,10 @@ namespace Givaro {
 
 		_domain.assign(R[0],_domain.one);
 		for(long d=1;d<=(n.value()/2);++d) {
-			_domain.assign(R[(size_t)d],_domain.one);
+			_domain.assign(R[d],_domain.one);
 			if (is_irreducible(R))
 				return true;
-			_domain.assign(R[(size_t)d],_domain.zero);
+			_domain.assign(R[d],_domain.zero);
 		}
 		return false ;
 	}
@@ -137,16 +137,16 @@ namespace Givaro {
 	{
 		for(long d=2;d<=(n.value()/2);++d) {
 			for(Residu_t b=0; b<MOD; ++b) {
-				_domain.assign(R[(size_t)d],(Element_t)b);
+				_domain.assign(R[d],b);
 				for(Residu_t a=1; a<MOD; ++a) {
-					_domain.assign(R[0],(Element_t)a);
+					_domain.assign(R[0],a);
 					if (is_irreducible(R) && (is_prim_root(IXE,R) ))
 						return true;
 				}
 			}
 			// _domain.assign(R[0],_domain.zero);
 			// JGD 21.10.02
-			_domain.assign(R[(size_t)d],_domain.zero);
+			_domain.assign(R[d],_domain.zero);
 		}
 		return false;
 	}
@@ -158,10 +158,10 @@ namespace Givaro {
 
 		_domain.assign(R[0],_domain.one);
 		for(long d=2;d<=(n.value()/2);++d) {
-			_domain.assign(R[(size_t)d],_domain.one);
+			_domain.assign(R[d],_domain.one);
 			if (is_irreducible(R) && (is_prim_root(IXE,R) ))
 				return true;
-			_domain.assign(R[(size_t)d],_domain.zero);
+			_domain.assign(R[d],_domain.zero);
 		}
 		return false ;
 	}
@@ -172,9 +172,9 @@ namespace Givaro {
 	{
 		for(long d=2;d<n.value();++d) {
 			for(Residu_t b=0; b<MOD; ++b) {
-				_domain.assign(R[(size_t)d],(Element_t)b);
+				_domain.assign(R[d],b);
 				for(Residu_t a=1; a<MOD; ++a) {
-					_domain.assign(R[0],(Element_t)a);
+					_domain.assign(R[0],a);
 					if (is_irreducible2(R) && (is_prim_root(IXE,R) ))
 						return true;
 				}
@@ -192,10 +192,10 @@ namespace Givaro {
 
 		_domain.assign(R[0],_domain.one);
 		for(long d=2;d<=n.value();++d) {
-			_domain.assign(R[(size_t)d],_domain.one);
+			_domain.assign(R[d],_domain.one);
 			if (is_irreducible2(R) && (is_prim_root(IXE,R) ))
 				return true;
-			_domain.assign(R[(size_t)d],_domain.zero);
+			_domain.assign(R[d],_domain.zero);
 		}
 		return false ;
 	}
@@ -213,9 +213,9 @@ namespace Givaro {
 
 		do {
 			this->random( (RandIter&)_g, R, n); // must cast away const
-			_domain.assign(R[(size_t)n.value()],_domain.one);
+			_domain.assign(R[n.value()],_domain.one);
 			for(Residu_t a=0; a<MOD; ++a) {
-				_domain.assign(R[0],(Type_t)a);
+				_domain.assign(R[0],a);
 				if (is_irreducible(R))
 					return true;
 			}
@@ -239,7 +239,7 @@ namespace Givaro {
 
 		do {
 			this->random( (RandIter&)_g, R, n); // must cast away const
-			_domain.assign(R[(size_t)n.value()],_domain.one);
+			_domain.assign(R[n.value()],_domain.one);
 			_domain.assign(R[0],_domain.one);
 			if (is_irreducible(R))
 				return true;
@@ -262,9 +262,9 @@ namespace Givaro {
 #endif
 		do {
 			this->random( (RandIter&)_g, R, n); // must cast away const
-			_domain.assign(R[(size_t)n.value()],_domain.one);
+			_domain.assign(R[n.value()],_domain.one);
 			for(Residu_t a=0; a<MOD; ++a) {
-				_domain.assign(R[0],(Element_t)a);
+				_domain.assign(R[0],a);
 				if (is_irreducible(R) && (is_prim_root(IXE,R) ))
 					return true;
 			}
@@ -288,7 +288,7 @@ namespace Givaro {
 
 		do {
 			this->random( (RandIter&)_g, R, n); // must cast away const
-			_domain.assign(R[(size_t)n.value()],_domain.one);
+			_domain.assign(R[n.value()],_domain.one);
 			_domain.assign(R[0],_domain.one);
 			if (is_irreducible(R) && (is_prim_root(IXE,R) ))
 				return true;
@@ -311,9 +311,9 @@ namespace Givaro {
 #endif
 		do {
 			this->random( (RandIter&)_g, R, n); // must cast away const
-			_domain.assign(R[(size_t)n.value()],_domain.one);
+			_domain.assign(R[n.value()],_domain.one);
 			for(Residu_t a=0; a<MOD; ++a) {
-				_domain.assign(R[0],(Element_t)a);
+				_domain.assign(R[0],a);
 				if (is_irreducible2(R) && (is_prim_root(IXE,R) ))
 					return true;
 			}
@@ -336,7 +336,7 @@ namespace Givaro {
 #endif
 		do {
 			this->random( (RandIter&)_g, R, n); // must cast away const
-			_domain.assign(R[(size_t)n.value()],_domain.one);
+			_domain.assign(R[n.value()],_domain.one);
 			_domain.assign(R[0],_domain.one);
 			if (is_irreducible2(R) && (is_prim_root(IXE,R) ))
 				return true;
@@ -362,7 +362,7 @@ namespace Givaro {
 	template<class Domain, class Tag, class RandIter >
 	inline typename Poly1FactorDom<Domain,Tag, RandIter>::Element& Poly1FactorDom<Domain,Tag, RandIter>::creux_random_irreducible (Element& R, Degree n) const
 	{
-		this->init(R, n);
+		init(R, n);
 
 		Residu_t MOD = _domain.residu();
 
@@ -398,7 +398,7 @@ namespace Givaro {
 	{
 		// Search for a monic irreducible Polynomial
 		// with random Elements
-		this->init(R, n);
+		init(R, n);
 		Residu_t MOD = _domain.residu();
 
 		if (find_irred_randomial(R,n,MOD))
@@ -417,9 +417,9 @@ namespace Givaro {
 	template<class Domain, class Tag, class RandIter >
 	inline typename Poly1FactorDom<Domain,Tag, RandIter>::Element& Poly1FactorDom<Domain,Tag, RandIter>::ixe_irreducible (Element& R, Degree n) const
 	{
-		this->init(R, n);
+		init(R, n);
 		Element IXE;
-		this->init(IXE,Degree(1));
+		init(IXE,Degree(1));
 		Residu_t MOD = _domain.residu();
 
 		// Search for an irreducible BINOMIAL : X^n + a
@@ -453,9 +453,9 @@ namespace Givaro {
 	template<class Domain, class Tag, class RandIter >
 	inline typename Poly1FactorDom<Domain,Tag, RandIter>::Element& Poly1FactorDom<Domain,Tag, RandIter>::ixe_irreducible2 (Element& R, Degree n) const
 	{
-		this->init(R, n);
+		init(R, n);
 		Element IXE;
-		this->init(IXE,Degree(1));
+		init(IXE,Degree(1));
 		Residu_t MOD = _domain.residu();
 
 		// Search for an irreducible BINOMIAL : X^n + a
@@ -496,16 +496,16 @@ namespace Givaro {
 		// Square free ?
 		Rep W,D; this->gcd(W,diff(D,P),P);
 		Degree d, dP;
-		if (this->degree(d,W) > 0) return 0;
+		if (degree(d,W) > 0) return 0;
 		IntFactorDom<> FD;
 
-		long n = this->degree(dP,P).value();
+		long n = degree(dP,P).value();
 		IntFactorDom<>::Rep qn;
 
 		FD.pow( qn, IntFactorDom<>::Rep(MOD), n);
-		Rep Unit, G1; this->init(Unit, Degree(1));
+		Rep Unit, G1; init(Unit, Degree(1));
 		this->powmod(G1, Unit, qn, P);
-		if (this->degree(d, sub(D,G1,Unit)) >= 0) return 0;
+		if (degree(d, sub(D,G1,Unit)) >= 0) return 0;
 
 		std::vector<IntFactorDom<>::Rep> Lp; std::vector<unsigned long> Le;
 		FD.set(Lp, Le, n );
@@ -513,7 +513,7 @@ namespace Givaro {
 			long ttmp;
 			FD.pow( qn, IntFactorDom<>::Rep(MOD), n/FD.convert(ttmp,*p) );
 			this->powmod(G1, Unit, qn, P);
-			if (this->degree(d, sub(D,G1,Unit)) < 0) return 0;
+			if (degree(d, sub(D,G1,Unit)) < 0) return 0;
 		}
 
 		return 1;
@@ -532,13 +532,13 @@ namespace Givaro {
 	{
 		bool isproot = 0;
 		Rep A, G;
-		this->mod(A,P,F);
+		mod(A,P,F);
 		Degree d;
-		if ( this->degree(d, this->gcd(G,A,F)) == 0) {
+		if ( degree(d, this->gcd(G,A,F)) == 0) {
 			Residu_t MOD = _domain.residu();
 			IntFactorDom<> FD;
 			IntFactorDom<>::Element IMOD( MOD ), q, qp;
-			this->degree(d,F);
+			degree(d,F);
 			//         FD.pow(q ,IMOD, d.value());
 			//         FD.sub(qp, q, FD.one);
 			FD.subin( FD.pow(qp ,IMOD, d.value()) , FD.one);
@@ -560,11 +560,11 @@ namespace Givaro {
 		bool isproot = 0;
 		Rep A, G; mod(A,P,F);
 		Degree d;
-		if ( this->degree(d, this->gcd(G,A,F)) == 0) {
+		if ( degree(d, this->gcd(G,A,F)) == 0) {
 			Residu_t MOD = _domain.residu();
 			IntFactorDom<> FD;
 			IntFactorDom<>::Element IMOD( MOD ), g, gg, tt, qp;
-			this->degree(d,F);
+			degree(d,F);
 			//         FD.pow(q ,IMOD, d.value());
 			//         FD.sub(qp, q, FD.one);
 			FD.subin( FD.pow(qp ,IMOD, d.value()) , FD.one);
@@ -592,31 +592,31 @@ namespace Givaro {
 	template<class Domain, class Tag, class RandIter >
 	inline typename Poly1FactorDom<Domain,Tag, RandIter>::Rep& Poly1FactorDom<Domain,Tag, RandIter>::give_prim_root(Rep& R, const Rep& F)  const
 	{
-		Degree n; this->degree(n,F);
+		Degree n; degree(n,F);
 		Residu_t MOD = _domain.residu();
 		//    this->write(std::cout << "Give Pr: ", F) << std::endl;
 
 
 		// Search for a primitive BINOMIAL : X^i + a
 		for(Degree di=1;di<n;++di) {
-			this->init(R, di);
+			init(R, di);
 			//         for(Residu_t a=MOD; a--; )
 			for(Residu_t a=0; a<MOD;++a ) {
-				_domain.assign(R[0],(Element_t)a);
+				_domain.assign(R[0],a);
 				if (is_prim_root(R,F))
 					return R;
 			}
 		}
 		// Search for a primitive TRINOMIAL : X^i + b*X^j + a
 		for(Degree di=2;di<n;++di) {
-			this->init(R, di);
+			init(R, di);
 			for(Degree dj=1;dj<di;++dj)
 				//             for(Residu_t b=MOD; b--;)
 				for(Residu_t b=0; b<MOD;++b) {
-					_domain.assign(R[(size_t)dj.value()],(Element_t)b);
+					_domain.assign(R[dj.value()],b);
 					//                 for(Residu_t a=MOD; a--;)
 					for(Residu_t a=0; a<MOD;++a ) {
-						_domain.assign(R[0],(Element_t)a);
+						_domain.assign(R[0],a);
 						if (is_prim_root(R,F))
 							return R;
 					}
@@ -627,9 +627,9 @@ namespace Givaro {
 		// with random Elements
 		do {
 			this->random( (RandIter&)_g, R, n); // must cast away const
-			_domain.assign(R[(size_t)n.value()],_domain.one);
+			_domain.assign(R[n.value()],_domain.one);
 			for(Residu_t a=0; a<MOD; ++a) {
-				_domain.assign(R[0],(Element_t)a);
+				_domain.assign(R[0],a);
 				if (is_prim_root(R,F))
 					return R;
 			}
@@ -640,16 +640,16 @@ namespace Givaro {
 	template<class Domain, class Tag, class RandIter >
 	inline typename Poly1FactorDom<Domain,Tag, RandIter>::Rep& Poly1FactorDom<Domain,Tag, RandIter>::give_random_prim_root(Rep& R, const Rep& F)  const
 	{
-		Degree n; this->degree(n,F);
+		Degree n; degree(n,F);
 		Residu_t MOD = _domain.residu();
 
 		// Search for a primitive Polynomial
 		// with random Elements
 		do {
 			this->random( (RandIter&)_g, R, n); // must cast away const
-			_domain.assign(R[(size_t)n.value()],_domain.one);
+			_domain.assign(R[n.value()],_domain.one);
 			for(Residu_t a=0; a<MOD; ++a) {
-				_domain.assign(R[0],(Element_t)a);
+				_domain.assign(R[0],a);
 				if (is_prim_root(R,F))
 					return R;
 			}

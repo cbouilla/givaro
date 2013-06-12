@@ -16,5 +16,3 @@ pkginclude_HEADERS= \
 noinst_LTLIBRARIES=libgivmemory.la
 
 libgivmemory_la_SOURCES=givaromm.C
-
-EXTRA_DIST=memory.doxy

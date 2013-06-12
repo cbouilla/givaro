@@ -9,7 +9,6 @@
 #include <givaro/givzpz64std.h>
 #include <givaro/givzpz.h>
 #include <givaro/givgfq.h>
-#include <givaro/givintprime.h>
 #include <givaro/givmontg32.h>
 #include <givaro/givgfqext.h>
 #include <givaro/givextension.h>
@@ -18,7 +17,7 @@ using namespace Givaro;
 
 #define TESTE_EG( a, b ) \
 if (!F.areEqual((a),(b))) {\
-	F.write(F.write(std::cout,a) << "!=",b) << " failed (at line " <<  __LINE__ << ")" << std::endl; \
+	std::cout << F.write(std::cout,a) << "!=" << F.write(std::cout,b) << " failed (at line " <<  __LINE__ << ")" << std::endl; \
 	return(-1); \
 }
 
@@ -33,24 +32,6 @@ if (TestOneField(F,(int)a,(float)x)) {\
 	std::cout << #a << " failed !" << std::endl;\
 	return -1 ; \
 }
-
-template<class Int1, class Int2>
-long long locgcd ( const Int1 a, const Int2 b ) {
-//     std::cerr << std::endl << '|' << a << '^' << b << '|';
-    long long u3, v3; u3 = a; v3 = (long long)b;
-    while (v3 != 0) {
-        long long q, t3;
-        q = u3 / v3;
-        t3 = u3 - q * v3;
-        u3 = v3; v3 = t3;
-    }
-//     std::cerr << u3 << std::endl;
-
-    return u3;
-}
-
-
-
 
 template<class Field>
 int TestOneField(const Field& F, const int FIRSTINT, const float FIRSTFLOAT)
@@ -75,23 +56,11 @@ int TestOneField(const Field& F, const int FIRSTINT, const float FIRSTFLOAT)
 //         F.write(std::cerr << "a: ", a) << std::endl;
 //         F.write(std::cerr << "1: ", F.one) << std::endl;
         TESTE_EG(a, F.one);
-
-        F.init(ma,-1L);
-//         F.write(std::cerr) << std::endl;
-//         F.write(std::cerr << "a: ", a) << std::endl;
-//         F.write(std::cerr << "ma: ", ma) << std::endl;
-//         F.write(std::cerr << "1: ", F.one) << std::endl;
-//         F.write(std::cerr << "-1: ", F.mOne) << std::endl;
-        TESTE_EG(ma, F.mOne);
+	F.init(ma,-1L);
+        TESTE_EG(ma, F.mone);
 
 	F.init(a, FIRSTINT);
-    double invertible=(FIRSTFLOAT<0?-FIRSTFLOAT:FIRSTFLOAT);
-    do {
-        invertible += 1;
-        F.init(b, invertible);
-    } while ( locgcd( (long long)(invertible),F.characteristic()) != 1 );
-
-
+	F.init(b, FIRSTFLOAT);
 
 	F.init(c);            // empty constructor
 	F.init(d);            // empty constructor
@@ -101,18 +70,18 @@ int TestOneField(const Field& F, const int FIRSTINT, const float FIRSTFLOAT)
 	F.assign(c_,c);       // c_ <- c
 
 //         F.write(std::cerr) << std::endl;
-//         F.write(std::cerr << "a:=", a) << ';' << std::endl;
-//         F.write(std::cerr << "b:=", b) << ';' << std::endl;
-//         F.write(std::cerr << "c:=", c) << ';' << std::endl;
-//         F.write(std::cerr << "c_:=", c_) << ';' << std::endl;
+//         F.write(std::cerr << "a: ", a) << std::endl;
+//         F.write(std::cerr << "b: ", b) << std::endl;
+//         F.write(std::cerr << "c: ", c) << std::endl;
+//         F.write(std::cerr << "c_: ", c_) << std::endl;
 
 	TESTE_EG(c,c_);
 	F.subin(c_,a);
 //         F.write(std::cerr) << std::endl;
-//         F.write(std::cerr << "a:=", a) << ';' << std::endl;
-//         F.write(std::cerr << "b:=", b) << ';' << std::endl;
-//         F.write(std::cerr << "c:=", c) << ';' << std::endl;
-//         F.write(std::cerr << "c_:=", c_) << ';' << std::endl;
+//         F.write(std::cerr << "a: ", a) << std::endl;
+//         F.write(std::cerr << "b: ", b) << std::endl;
+//         F.write(std::cerr << "c: ", c) << std::endl;
+//         F.write(std::cerr << "c_: ", c_) << std::endl;
 
 	TESTE_EG(b,c_);
 
@@ -196,28 +165,28 @@ int TestOneField(const Field& F, const int FIRSTINT, const float FIRSTFLOAT)
 
 	if ((unsigned) F.characteristic() != (unsigned)2) {
 		F.init(e,1);
-		F.init(a,22993);
+		F.init(a,22996);
 		F.inv(b,a);
 		F.mul(c,b,a);
 
 		TESTE_EG(e,c);
 
-		F.init(a,22993);
-		F.init(b,22993);
+		F.init(a,22996);
+		F.init(b,22996);
 		F.invin(a);
 		F.mulin(a,b);
 	}
 
 	TESTE_EG(e,a);
 
-	F.init(a,37397);
+	F.init(a,37403);
 	F.inv(b,a);
 	F.mul(c,b,a);
 
 	TESTE_EG(e,c);
 
-	F.init(a,37397);
-	F.init(b,37397);
+	F.init(a,37403);
+	F.init(b,37403);
 	F.invin(a);
 	F.mulin(a,b);
 
@@ -231,9 +200,7 @@ int TestOneField(const Field& F, const int FIRSTINT, const float FIRSTFLOAT)
 
 }/*}}}*/
 
-#ifndef NBITER
 #define NBITER 50
-#endif
 
 template<class Field>
 int TestField(const Field& F, const int seed)
@@ -256,14 +223,6 @@ int TestField(const Field& F, const int seed)
     return 0;
 }/*}}}*/
 
-template<class Ints>
-Ints previousprime(const Ints& a) {
-    static IntPrimeDom IPD;
-    Integer aI(a);
-    IPD.prevprimein(aI);
-    return (Ints)aI;
-}
-
 
 
 int main(int argc, char ** argv)
@@ -272,7 +231,7 @@ int main(int argc, char ** argv)
 #ifdef GIVARO_DEBUG
     std::cerr << "seed: " << seed << std::endl;
 #endif
-    Integer::seeding((unsigned long)seed);
+    Integer::seeding(seed);
 
 
 #ifdef NDEBUG
@@ -305,69 +264,42 @@ int main(int argc, char ** argv)
 	Montgomery<Std32> M13(13);
 	JETESTE(M13,seed);
 
-// Maximal prime values
-
-	// prime modulo max over 15 bits
-	ZpzDom<Std16> CUpmax( previousprime(ZpzDom<Std16>::getMaxModulus()) ); // 16381
-	JETESTE(CUpmax,seed);
-
-	// previous prime modulo max fully tabulated
-	ZpzDom<Log16> Lpmax( previousprime(ZpzDom<Log16>::getMaxModulus() ) ); // 16369
-	JETESTE(Lpmax,seed);
-
-	// prime modulo max over 31 bits
-	ZpzDom<Std32> Zpmax( previousprime(ZpzDom<Std32>::getMaxModulus() ) ); // 46337
-	JETESTE(Zpmax,seed);
-
-	// prime modulo max over 32 bits
-	ZpzDom<Unsigned32> Upmax(previousprime(ZpzDom<Unsigned32>::getMaxModulus() ) ); // 65521
-	JETESTE(Upmax,seed);
-
-	// prime modulo max over 32 bits with Montgomery reduction
-	Montgomery<Std32> Mpmax(previousprime(Montgomery<Std32>::getMaxModulus() ) ); // 40499
-	JETESTE(Mpmax,seed);
-
-#ifdef __USE_Givaro_SIXTYFOUR__
-	// prime modulo max over 63 bits
-	ZpzDom<Std64> LLpmax(previousprime(ZpzDom<Std64>::getMaxModulus() ) ); // 3037000493ULL
-	JETESTE(LLpmax,seed);
-#endif
-
-	// Zech log prime field with prime max
-	GFqDom<int> GFpmax( 65521UL );
-	JETESTE(GFpmax,seed);
-
-	// Zech log prime field with prime max (memory limited)
-	GFqDom<long long> GFLLpmax( 4194301ULL );
-	JETESTE(GFLLpmax,seed);
-
 
 // Maximal values
+
 	// prime modulo max over 15 bits
-	ZpzDom<Std16> CUmax(ZpzDom<Std16>::getMaxModulus() );
+	ZpzDom<Std16> CUmax(16381);
 	JETESTE(CUmax,seed);
 
 	// prime modulo max fully tabulated
-	ZpzDom<Log16> Lmax( ZpzDom<Log16>::getMaxModulus()  );
+	ZpzDom<Log16> Lmax(16381);
 	JETESTE(Lmax,seed);
 
 	// prime modulo max over 31 bits
-	ZpzDom<Std32> Zmax(ZpzDom<Std32>::getMaxModulus());
+	ZpzDom<Std32> Zmax(46337);
 	JETESTE(Zmax,seed);
 
-	// modulo max over 32 bits
-	ZpzDom<Unsigned32> Umax(ZpzDom<Unsigned32>::getMaxModulus() );
+	// prime modulo max over 32 bits
+	ZpzDom<Unsigned32> Umax(65521);
 	JETESTE(Umax,seed);
+
 	// prime modulo max over 32 bits with Montgomery reduction
-	Montgomery<Std32> Mmax(Montgomery<Std32>::getMaxModulus() );
+	Montgomery<Std32> Mmax(40499);
 	JETESTE(Mmax,seed);
 
 #ifdef __USE_Givaro_SIXTYFOUR__
 	// prime modulo max over 63 bits
-	ZpzDom<Std64> LLmax(ZpzDom<Std64>::getMaxModulus());
+	ZpzDom<Std64> LLmax(3037000493ULL);
 	JETESTE(LLmax,seed);
 #endif
 
+	// Zech log prime field with prime max
+	GFqDom<int> GFmax( 65521UL );
+	JETESTE(GFmax,seed);
+
+	// Zech log prime field with prime max (memory limited)
+	GFqDom<long long> GFLLmax( 4194301ULL );
+	JETESTE(GFLLmax,seed);
 
 
 // Characteristic 2
@@ -415,14 +347,6 @@ int main(int argc, char ** argv)
 	// modulo 13 over arbitrary size
 	ZpzDom<Integer> IntZ13(13);
 	JETESTE(IntZ13,seed);
-
-	// modulo 13 with generic implementation over signed integral type
-	ZpzDom<long long> GenZ13(13);
-	JETESTE(GenZ13,seed);
-
-	// modulo 101 with generic implementation over unsigned signed integral type
-	ZpzDom<unsigned long long> GenZ101(101);
-	JETESTE(GenZ101,seed);
 
         // Zech log finite field with 256 elements
         // and prescribed 1 + x +x^3 +x^4 +x^8 irreducible polynomial

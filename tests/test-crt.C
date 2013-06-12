@@ -37,7 +37,7 @@ Integer tmain(int argc, char ** argv, const GivRandom& generator)
 	typedef RNSsystem<Integer, Field >      CRTSystem;
 	typedef typename CRTSystem::domains	  Domains;
 	typedef typename CRTSystem::array	 Elements;
-// 	typedef typename CRTSystem::ring	     Ring;
+	typedef typename CRTSystem::ring	     Ring;
 
 	typedef RNSsystemFixed<Integer>    CRTSystemFixed;
 	typedef CRTSystemFixed::array             Prime_t;
@@ -45,7 +45,7 @@ Integer tmain(int argc, char ** argv, const GivRandom& generator)
 	IntPrimeDom ID;
 	Integer a( generator() >>(argc>2?atoi(argv[2]):17) ), M(1), b;
 
-	Prime_t  Primes( argc>1 ? (size_t)atoi(argv[1]):15);
+	Prime_t  Primes( argc>1 ? atoi(argv[1]):15);
 	Domains  PrimeDoms( Primes.size() );
 	Elements Moduli( Primes.size() );
 	Prime_t  ModuliInts( Primes.size() );
@@ -140,15 +140,11 @@ Integer tmain(int argc, char ** argv, const GivRandom& generator)
 int main(int argc, char ** argv)
 {
 	::Givaro::GivaroMain::Init();
-#ifdef GIVARO_DEBUG
-    Givaro::GivMMInfo MemoryInfo;
-#endif
-
 	// argv[1] : number of primes
 	// argv[2] : 2^{32-j} is size of primes
 	// argv[3] : seed for generator
 
-	GivRandom seedor( argc>3 ? (unsigned)atoi(argv[3]): (unsigned)BaseTimer::seed() );
+	GivRandom seedor( argc>3 ? atoi(argv[3]): BaseTimer::seed() );
 	unsigned long seed = seedor.seed();
 
 
@@ -156,7 +152,6 @@ int main(int argc, char ** argv)
 	Integer a2 = tmain<Field2>(argc, argv, GivRandom(seed));
 	Integer a3 = tmain<Field3>(argc, argv, GivRandom(seed));
 	Integer a4 = tmain<Field4>(argc, argv, GivRandom(seed));
-    
 	Integer a5 = tmain<Field5>(argc, argv, GivRandom(seed));
 	Integer a6 = tmain<Field6>(argc, argv, GivRandom(seed));
 	Integer a7 = tmain<Field7>(argc, argv, GivRandom(seed));
@@ -190,8 +185,7 @@ int main(int argc, char ** argv)
 #ifdef GIVARO_DEBUG
 	if (! success)
 		std::cerr << "Error: " << seed << std::endl;
-    MemoryInfo.print(std::cerr) << std::endl;
-#endif    
+#endif
 
 	::Givaro::GivaroMain::End();
 	return (! success);

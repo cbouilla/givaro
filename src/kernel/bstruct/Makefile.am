@@ -24,8 +24,6 @@ pkginclude_HEADERS=     \
 	givlist0.inl		\
 	givstack.inl
 
-EXTRA_DIST = bstruct.doxy
-
 noinst_LTLIBRARIES=libgivbstruct.la
 
 libgivbstruct_la_SOURCES=givbits.C

@@ -8,9 +8,6 @@
 // Authors: M. Samama, T. Gautier
 // $Id: gmp++_int_mul.C,v 1.11 2011-01-20 08:19:15 jgdumas Exp $
 // ==========================================================================
-/** @file gmp++/gmp++_int_mul.C
- * muling stuff.
- */
 
 #ifndef __GIVARO_gmpxx_gmpxx_int_mul_C
 #define __GIVARO_gmpxx_gmpxx_int_mul_C
@@ -29,7 +26,7 @@ Integer& Integer::mulin(Integer& res, const Integer& n)
   mpz_mul( (mpz_ptr)&res.gmp_rep, (mpz_ptr)&res.gmp_rep, (mpz_srcptr)&n.gmp_rep );
   return res;
 }
-Integer& Integer::mulin(Integer& res, const long int n)
+Integer& Integer::mulin(Integer& res, const long n)
 {
   if (isZero(n)) return res = Integer::zero;
   if (isZero(res)) return res;
@@ -41,7 +38,7 @@ Integer& Integer::mulin(Integer& res, const long int n)
   mpz_mul_si( (mpz_ptr)&res.gmp_rep, (mpz_ptr)&res.gmp_rep, n);
   return res;
 }
-Integer& Integer::mulin(Integer& res, const long unsigned int n)
+Integer& Integer::mulin(Integer& res, const unsigned long n)
 {
   if (isZero(n)) return res = Integer::zero;
   if (isZero(res)) return res;
@@ -56,7 +53,7 @@ Integer& Integer::mul(Integer& res, const Integer& n1, const Integer& n2)
   mpz_mul( (mpz_ptr)&res.gmp_rep, (mpz_srcptr)&n1.gmp_rep, (mpz_srcptr)&n2.gmp_rep);
   return res;
 }
-Integer& Integer::mul(Integer& res, const Integer& n1, const long int n2)
+Integer& Integer::mul(Integer& res, const Integer& n1, const long n2)
 {
   if (isZero(n1)) return res = Integer::zero;
   if (isZero(n2)) return res = Integer::zero;
@@ -67,7 +64,7 @@ Integer& Integer::mul(Integer& res, const Integer& n1, const long int n2)
   mpz_mul_si( (mpz_ptr)&res.gmp_rep, (mpz_srcptr)&n1.gmp_rep, n2);
   return res;
 }
-Integer& Integer::mul(Integer& res, const Integer& n1, const long unsigned int n2)
+Integer& Integer::mul(Integer& res, const Integer& n1, const unsigned long n2)
 {
   if (isZero(n1)) return res = Integer::zero;
   if (isZero(n2)) return res = Integer::zero;
@@ -84,7 +81,7 @@ Integer& Integer::axpy(Integer& res, const Integer& a, const Integer& x, const I
     return res;
 }
 
-Integer& Integer::axpy(Integer& res, const Integer& a, const long unsigned int x, const Integer& b)
+Integer& Integer::axpy(Integer& res, const Integer& a, const long unsigned x, const Integer& b)
 {
     if (&res == &b) return Integer::axpyin(res,a,x);
     if (isZero(a) || isZero(x)) return res = b;
@@ -101,7 +98,7 @@ Integer& Integer::axpyin(Integer& res, const Integer& a, const Integer& x)
     return res;
 }
 
-Integer& Integer::axpyin(Integer& res, const Integer& a, const long unsigned int x)
+Integer& Integer::axpyin(Integer& res, const Integer& a, const long unsigned x)
 {
     if (isZero(a) || isZero(x)) return res;
     mpz_addmul_ui( (mpz_ptr)&res.gmp_rep, (mpz_srcptr)&a.gmp_rep, x);
@@ -117,7 +114,7 @@ Integer& Integer::maxpy(Integer& res, const Integer& a, const Integer& x, const 
     mpz_sub( (mpz_ptr)&res.gmp_rep, (mpz_srcptr)&b.gmp_rep, (mpz_ptr)&res.gmp_rep);
 	return res;
 }
-Integer& Integer::maxpy(Integer& res, const Integer& a, const long unsigned int x, const Integer& b)
+Integer& Integer::maxpy(Integer& res, const Integer& a, const long unsigned x, const Integer& b)
 {
     if (isZero(a) || isZero(x)) return res=b;
     if (&res == &b) return Integer::maxpyin(res,a,x);
@@ -135,7 +132,7 @@ Integer& Integer::axmy(Integer& res, const Integer& a, const Integer& x, const I
     return res;
 }
 
-Integer& Integer::axmy(Integer& res, const Integer& a, const long unsigned int x, const Integer& b)
+Integer& Integer::axmy(Integer& res, const Integer& a, const long unsigned x, const Integer& b)
 {
     if (&res == &b) return Integer::axmyin(res,a,x);
     if (isZero(a) || isZero(x)) return Integer::neg(res,b);
@@ -151,7 +148,7 @@ Integer& Integer::axmyin(Integer& res, const Integer& a, const Integer& x)
 	return res ;
 }
 
-Integer& Integer::axmyin(Integer& res, const Integer& a, const long unsigned int x)
+Integer& Integer::axmyin(Integer& res, const Integer& a, const unsigned long x)
 {
 	Integer::maxpyin(res,a,x);
 	Integer::negin(res);
@@ -165,7 +162,7 @@ Integer& Integer::maxpyin(Integer& res, const Integer& a, const Integer& x)
     return res;
 }
 
-Integer& Integer::maxpyin(Integer& res, const Integer& a, const long unsigned int x)
+Integer& Integer::maxpyin(Integer& res, const Integer& a, const unsigned long x)
 {
     if (isZero(a) || isZero(x)) return res;
     mpz_submul_ui( (mpz_ptr)&res.gmp_rep, (mpz_srcptr)&a.gmp_rep, x);
@@ -182,7 +179,7 @@ Integer& Integer::operator *= (const Integer& n)
   return *this = res;
 }
 
-Integer& Integer::operator *= (const long unsigned int l)
+Integer& Integer::operator *= (const unsigned long l)
 {
   if (l==0) return *this = Integer::zero;
   if (isZero(*this)) return *this;
@@ -191,7 +188,7 @@ Integer& Integer::operator *= (const long unsigned int l)
   return *this;
 }
 
-Integer& Integer::operator *= (const long int l)
+Integer& Integer::operator *= (const long l)
 {
   if (l==0) return *this =Integer::zero;
   if (isZero(*this)) return *this;
@@ -214,7 +211,7 @@ Integer Integer::operator * (const Integer& n) const
   return res;
 }
 
-Integer Integer::operator * (const long unsigned int l) const
+Integer Integer::operator * (const unsigned long l) const
 {
   if (l==0) return Integer::zero;
   if (isZero(*this)) return Integer::zero;
@@ -224,7 +221,7 @@ Integer Integer::operator * (const long unsigned int l) const
   return res;
 }
 
-Integer Integer::operator * (const long int l) const
+Integer Integer::operator * (const long l) const
 {
   if (l==0) return Integer::zero;
   if (isZero(*this)) return Integer::zero;
@@ -246,13 +243,13 @@ Integer Integer::operator * (const long int l) const
 	}
 	 Integer operator * (const unsigned int l, const Integer& n)
 	{
-		return n * (long unsigned)l;
+		return n * (unsigned long)l;
 	}
-	 Integer operator * (const long int l, const Integer& n)
+	 Integer operator * (const long l, const Integer& n)
 	{
 		return n * l;
 	}
-	 Integer operator * (const long unsigned int l, const Integer& n)
+	 Integer operator * (const unsigned long l, const Integer& n)
 	{
 		return n * l;
 	}
@@ -262,7 +259,7 @@ Integer Integer::operator * (const long int l) const
 	}
 	 Integer operator * (const Integer& n, const unsigned int l)
 	{
-		return n * (long unsigned)l;
+		return n * (unsigned long)l;
 	}
 
 	 Integer& operator *= (Integer& n, const int l)
@@ -271,31 +268,31 @@ Integer Integer::operator * (const long int l) const
 	}
 	 Integer& operator *= (Integer& n, const unsigned int l)
 	{
-		return n *= (long unsigned)l;
+		return n *= (unsigned long)l;
 	}
 
 #ifdef __USE_GMPPLUSPLUS_SIXTYFOUR__
-	 Integer operator * (const Integer& n, const long long int l)
+	 Integer operator * (const Integer& n, const long long l)
 	{
 		return n * (Integer)l;
 	}
-	 Integer operator * (const Integer& n, const long long unsigned int l)
+	 Integer operator * (const Integer& n, const unsigned long long l)
 	{
 		return n * (Integer)l;
 	}
-	 Integer operator * (const long long int l, const Integer& n)
+	 Integer operator * (const long long l, const Integer& n)
 	{
 		return n*l;
 	}
-	 Integer operator * (const long long unsigned int l, const Integer& n)
+	 Integer operator * (const unsigned long long l, const Integer& n)
 	{
 		return n*l;
 	}
-	 Integer& operator *= (Integer& n, const long long int l)
+	 Integer& operator *= (Integer& n, const long long l)
 	{
 		return n *= (Integer)l;
 	}
-	 Integer& operator *= (Integer& n, const long long unsigned int l)
+	 Integer& operator *= (Integer& n, const unsigned long long l)
 	{
 		return n *= (Integer)l;
 	}

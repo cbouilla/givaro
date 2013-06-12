@@ -6,12 +6,12 @@
 
 AC_PREREQ(2.61)
 
-AC_INIT([Givaro],[3.7.2],[Jean-Guillaume.Dumas@imag.fr],[givaro],
+AC_INIT([Givaro],[3.5.0],[Jean-Guillaume.Dumas@imag.fr],[givaro],
 		[http://ljk.imag.fr/CASYS/LOGICIELS/givaro])
 AC_CONFIG_MACRO_DIR([macros])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([1.8 gnu no-dependencies -Wall -Wno-portability])
-AC_CONFIG_HEADERS([config.h])
+AM_CONFIG_HEADER([config.h])
 AX_PREFIX_CONFIG_H(givaro-config.h, __GIVARO)
 AC_PATH_PROG(RM, rm, $FALSE)
 RM="$RM -f"
@@ -36,14 +36,12 @@ AC_WARNINGS
 AC_INLINE
 
 echo "-----------------------------------------------"
-
 # CFLAGS=${CFLAGS:-$DEFAULT_CFLAGS}
 # CXXFLAGS=${CXXFLAGS:-$DEFAULT_CXXFLAGS}
 
 ######################################################
 # Try and pass different flags according to compiler #
 ######################################################
-
 
 # disable default -g -O2 CXXFLAGS
 : ${CXXFLAGS=""}
@@ -75,48 +73,24 @@ if test "x$PROF" = "xyes" ; then
 fi
 
 if test "x$WARN" = "xyes" -o "x$WARN" = "xfull" ; then
-	case x${CCNAM} in
-		xicc)
-			WARN_CFLAGS="${WARN_CFLAGS} -Wcheck"
-			# DEBUG_CFLAGS="-fast"
-			;;
-		xeko)
-			WARN_CFLAGS="${WARN_CFLAGS} -Wno-unused-parameter"
-			;;
-		xgcc)
+	if test "x${CCNAM}" = "xicc" ; then
+		WARN_CFLAGS="${WARN_CFLAGS} -Wcheck"
+		# DEBUG_CFLAGS="-fast"
+	else
+		if test "x${CCNAM}" = "xgcc" -o  "x${CCNAM}" = "xeko"  ; then
 			WARN_CFLAGS="${WARN_CFLAGS} -Wextra -Wno-unused-parameter"
 			if test "x${WARN}" = "xfull" ; then
 				WARN_CFLAGS="${WARN_CFLAGS} -Wuninitialized -Wconversion -Wcast-qual -ansi -pedantic -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Wno-long-long"
 			fi
-		;;
-		xgcc48)
-			WARN_CFLAGS="${WARN_CFLAGS} -Wextra -Wno-unused-parameter"
-			if test "x${WARN}" = "xfull" ; then
-				WARN_CFLAGS="${WARN_CFLAGS} -Wuninitialized -Wconversion -Wcast-qual -ansi -pedantic -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Wno-long-long -fsanitize=address"
-			fi
-			;;
-
-		xclang)
-			WARN_CFLAGS="${WARN_CFLAGS} -Wextra -Wno-unused-parameter"
-			if test "x${WARN}" = "xfull" ; then
-				WARN_CFLAGS="${WARN_CFLAGS} -Wuninitialized -Wconversion -Wcast-qual -pedantic -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Wno-long-long"
-			fi
-			;;
-		xclang31)
-			WARN_CFLAGS="${WARN_CFLAGS} -Wextra -Wno-unused-parameter"
-			if test "x${WARN}" = "xfull" ; then
-				WARN_CFLAGS="${WARN_CFLAGS} -Wuninitialized -Wconversion -Wcast-qual -pedantic -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Wno-long-long -fsanitize=address"
-			fi
-			;;
-
-		*)
+		else
 			echo
 			echo "*******************************************************"
 			echo "unsupported compiler ($CCNAM). Please file a bug."
 			echo "*******************************************************"
 			echo
 			WARN_CFLAGS="${WARN_CFLAGS}"
-	esac
+		fi
+	fi
 fi
 
 
@@ -131,8 +105,10 @@ AC_PROG_LIBTOOL
 LT_PREREQ([2.2])
 LT_INIT
 
-
 echo "-----------------------------------------------"
+
+#check lib
+# AC_CHECK_LIB([givaro], [main])
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -187,50 +163,50 @@ if test ! -L src/library/vector/givaro ; then ln -s . src/library/vector/givaro 
 
 # Create some useful data types of fixed, known lengths
 
-# case 1 in
-  # $ac_cv_sizeof_char)
-     # GIVARO_INT8="char";
-     # ;;
-# esac
+case 1 in
+  $ac_cv_sizeof_char)
+     GIVARO_INT8="char";
+     ;;
+esac
 
-# case 2 in
-  # $ac_cv_sizeof_short)
-     # GIVARO_INT16="short";
-     # ;;
-  # $ac_cv_sizeof_int)
-     # GIVARO_INT16="int";
-     # ;;
-# esac
+case 2 in
+  $ac_cv_sizeof_short)
+     GIVARO_INT16="short";
+     ;;
+  $ac_cv_sizeof_int)
+     GIVARO_INT16="int";
+     ;;
+esac
 
-# case 4 in
-  # $ac_cv_sizeof_short)
-     # GIVARO_INT32="short";
-     # ;;
-  # $ac_cv_sizeof_int)
-     # GIVARO_INT32="int";
-     # ;;
-  # $ac_cv_sizeof_long)
-     # GIVARO_INT32="long";
-     # ;;
-# esac
+case 4 in
+  $ac_cv_sizeof_short)
+     GIVARO_INT32="short";
+     ;;
+  $ac_cv_sizeof_int)
+     GIVARO_INT32="int";
+     ;;
+  $ac_cv_sizeof_long)
+     GIVARO_INT32="long";
+     ;;
+esac
 
-# case 8 in
-  # $ac_cv_sizeof_short)
-     # GIVARO_INT64="short";
-     # ;;
-  # $ac_cv_sizeof_int)
-     # GIVARO_INT64="int";
-     # ;;
-  # $ac_cv_sizeof_long)
-     # GIVARO_INT64="long";
-     # ;;
-  # $ac_cv_sizeof_long_long)
-     # GIVARO_INT64="long long";
-     # ;;
-  # $ac_cv_sizeof___int64)
-     # GIVARO_INT64="__int64";
-     # ;;
-# esac
+case 8 in
+  $ac_cv_sizeof_short)
+     GIVARO_INT64="short";
+     ;;
+  $ac_cv_sizeof_int)
+     GIVARO_INT64="int";
+     ;;
+  $ac_cv_sizeof_long)
+     GIVARO_INT64="long";
+     ;;
+  $ac_cv_sizeof_long_long)
+     GIVARO_INT64="long long";
+     ;;
+  $ac_cv_sizeof___int64)
+     GIVARO_INT64="__int64";
+     ;;
+esac
 
 AC_DEFINE_UNQUOTED(INT8,  $GIVARO_INT8, Canonical 8-bit data type)
 AC_DEFINE_UNQUOTED(INT16, $GIVARO_INT16, Canonical 16-bit data type)
@@ -255,8 +231,8 @@ LB_CHECK_GMP(,,[
 echo '*******************************************************************************'
 echo ' ERROR: GMP not found!'
 echo
-echo ' GMP library compiled with --enable-cxx is required for this library to compile.'
-echo ' Please make sure GMP is installed and specify its location with the option'
+echo ' GMP version 3.1.1 or greater is required for this library to compile. Please'
+echo ' make sure GMP is installed and specify its location with the option'
 echo ' --with-gmp=<prefix> when running configure.'
 echo '*******************************************************************************'
 exit 1

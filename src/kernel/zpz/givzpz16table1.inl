@@ -18,20 +18,12 @@
 #ifndef __GIVARO_zpz16_table1_INL
 #define __GIVARO_zpz16_table1_INL
 
-#define __GIVARO_ZPZ16_LOG_MUL(r,p,a,b) ( (r)=  _tab_mul[(a) + (b)] )
-#define __GIVARO_ZPZ16_LOG_DIV(r,p,a,b) ( (r)=  _tab_div[(a) - (b)] )
-#define __GIVARO_ZPZ16_LOG_INV(r,p,b)   ( (r)=  _tab_div[ - (b)] )
-#define __GIVARO_ZPZ16_LOG_SUB(r,p,a,b) ( (r)=  _tab_mul[(a) + _tab_subone[(b) - (a)] ] )
+#define __GIVARO_ZPZ16_LOG_MUL(r,p,a,b) ( (r)= _tab_mul[(a) + (b)] )
+#define __GIVARO_ZPZ16_LOG_DIV(r,p,a,b) ( (r)= _tab_div[(a) - (b)] )
+#define __GIVARO_ZPZ16_LOG_INV(r,p,b)   ( (r)= _tab_div[ - (b)] )
+#define __GIVARO_ZPZ16_LOG_SUB(r,p,a,b) ( (r)= _tab_mul[(a) + _tab_subone[(b) - (a)] ] )
 #define __GIVARO_ZPZ16_LOG_ADD(r,p,a,b) ( (r)=  _tab_mul[(a) + _tab_addone[(b) - (a)] ] )
-#define __GIVARO_ZPZ16_LOG_NEG(r,p,a)   ( (r)=  _tab_neg[(a)] )
-
-#define __GIVARO_ZPZ16_LOG_MUL_RES(r,p,a,b) ( (r)= (Residu_t) _tab_mul[(a) + (b)] )
-#define __GIVARO_ZPZ16_LOG_DIV_RES(r,p,a,b) ( (r)= (Residu_t) _tab_div[(a) - (b)] )
-#define __GIVARO_ZPZ16_LOG_INV_RES(r,p,b)   ( (r)= (Residu_t) _tab_div[ - (b)] )
-#define __GIVARO_ZPZ16_LOG_SUB_RES(r,p,a,b) ( (r)= (Residu_t) _tab_mul[(a) + _tab_subone[(b) - (a)] ] )
-#define __GIVARO_ZPZ16_LOG_ADD_RES(r,p,a,b) ( (r)= (Residu_t) _tab_mul[(a) + _tab_addone[(b) - (a)] ] )
-#define __GIVARO_ZPZ16_LOG_NEG_RES(r,p,a)   ( (r)= (Residu_t) _tab_neg[(a)] )
-
+#define __GIVARO_ZPZ16_LOG_NEG(r,p,a)   ( (r)= _tab_neg[(a)] )
 
 /* Pascal Giorgi
    Changing the order of parameters.
@@ -42,11 +34,6 @@
 // a*b-c
 #define __GIVARO_ZPZ16_LOG_MULSUB(r,p,a,b,c) \
 { __GIVARO_ZPZ16_LOG_MUL(r, p, a, b); __GIVARO_ZPZ16_LOG_SUB(r, p, r, c); }
-
-#define __GIVARO_ZPZ16_LOG_MULADD_RES(r,p,a,b,c) \
-{ __GIVARO_ZPZ16_LOG_MUL_RES(r, p, a, b); __GIVARO_ZPZ16_LOG_ADD_RES(r, p, r, c); }
-#define __GIVARO_ZPZ16_LOG_MULSUB_RES(r,p,a,b,c) \
-{ __GIVARO_ZPZ16_LOG_MUL_RES(r, p, a, b); __GIVARO_ZPZ16_LOG_SUB_RES(r, p, r, c); }
 
 namespace Givaro {
 
@@ -139,63 +126,63 @@ namespace Givaro {
 	inline void ZpzDom<Log16>::mul (const size_t sz, Array r, constArray a, constArray b) const
 	{
 		for ( size_t i=sz ; --i ; ) {
-			__GIVARO_ZPZ16_LOG_MUL_RES(r[i], _p,a[i], b[i]);
+			__GIVARO_ZPZ16_LOG_MUL(r[i], _p,a[i], b[i]);
 		}
 	}
 
 	inline void ZpzDom<Log16>::mul (const size_t sz, Array r, constArray a, Rep b) const
 	{
 		for ( size_t i=sz ; --i ; ) {
-			__GIVARO_ZPZ16_LOG_MUL_RES(r[i], _p, a[i], b);
+			__GIVARO_ZPZ16_LOG_MUL(r[i], _p, a[i], b);
 		}
 	}
 
 	inline void ZpzDom<Log16>::div (const size_t sz, Array r, constArray a, constArray b) const
 	{
 		for ( size_t i=sz ; --i ; ) {
-			__GIVARO_ZPZ16_LOG_DIV_RES( r[i], _p, a[i], b[i]);
+			__GIVARO_ZPZ16_LOG_DIV( r[i], _p, a[i], b[i]);
 		}
 	}
 
 	inline void ZpzDom<Log16>::div (const size_t sz, Array r, constArray a, Rep b) const
 	{
 		for ( size_t i=sz ; --i ; ) {
-			__GIVARO_ZPZ16_LOG_DIV_RES( r[i], _p, a[i], b);
+			__GIVARO_ZPZ16_LOG_DIV( r[i], _p, a[i], b);
 		}
 	}
 
 	inline void ZpzDom<Log16>::add (const size_t sz, Array r, constArray a, constArray b) const
 	{
 		for ( size_t i=sz ; --i ; ) {
-			__GIVARO_ZPZ16_LOG_ADD_RES(r[i], _p, a[i], b[i]);
+			__GIVARO_ZPZ16_LOG_ADD(r[i], _p, a[i], b[i]);
 		}
 	}
 
 	inline void ZpzDom<Log16>::add (const size_t sz, Array r, constArray a, Rep b) const
 	{
 		for ( size_t i=sz ; --i ; ) {
-			__GIVARO_ZPZ16_LOG_ADD_RES(r[i], _p, a[i], b);
+			__GIVARO_ZPZ16_LOG_ADD(r[i], _p, a[i], b);
 		}
 	}
 
 	inline void ZpzDom<Log16>::sub (const size_t sz, Array r, constArray a, constArray b) const
 	{
 		for ( size_t i=sz ; --i ; ) {
-			__GIVARO_ZPZ16_LOG_SUB_RES(r[i], _p, a[i], b[i]);
+			__GIVARO_ZPZ16_LOG_SUB(r[i], _p, a[i], b[i]);
 		}
 	}
 
 	inline void ZpzDom<Log16>::sub (const size_t sz, Array r, constArray a, Rep b) const
 	{
 		for ( size_t i=sz ; --i ; ) {
-			__GIVARO_ZPZ16_LOG_SUB_RES(r[i], _p, a[i], b);
+			__GIVARO_ZPZ16_LOG_SUB(r[i], _p, a[i], b);
 		}
 	}
 
 	inline void ZpzDom<Log16>::neg (const size_t sz, Array r, constArray a) const
 	{
 		for ( size_t i=sz ; --i ; ) {
-			__GIVARO_ZPZ16_LOG_NEG_RES(r[i], _p, a[i]);
+			__GIVARO_ZPZ16_LOG_NEG(r[i], _p, a[i]);
 		}
 	}
 
@@ -256,7 +243,7 @@ namespace Givaro {
 	(const size_t sz, Array r, constArray a, constArray x, constArray y) const
 	{
 		for ( size_t i=sz ; --i ; ) {
-			__GIVARO_ZPZ16_LOG_MULADD_RES(r[i], _p, a[i], x[i], y[i]);
+			__GIVARO_ZPZ16_LOG_MULADD(r[i], _p, a[i], x[i], y[i]);
 		}
 	}
 
@@ -264,7 +251,7 @@ namespace Givaro {
 	(const size_t sz, Array r, constArray a, constArray x) const
 	{
 		for ( size_t i=sz ; --i ; ) {
-			__GIVARO_ZPZ16_LOG_MULADD_RES(r[i], _p, a[i], x[i], r[i]);
+			__GIVARO_ZPZ16_LOG_MULADD(r[i], _p, a[i], x[i], r[i]);
 		}
 	}
 
@@ -305,7 +292,7 @@ namespace Givaro {
 	(const size_t sz, Array r, constArray a, constArray x, constArray y) const
 	{
 		for ( size_t i=sz ; --i ; ) {
-			__GIVARO_ZPZ16_LOG_MULSUB_RES(r[i], _p, a[i], x[i], y[i]);
+			__GIVARO_ZPZ16_LOG_MULSUB(r[i], _p, a[i], x[i], y[i]);
 		}
 	}
 
@@ -313,8 +300,8 @@ namespace Givaro {
 					    constArray a, constArray x) const
 	{
 		for ( size_t i=sz ; --i ; ) {
-			__GIVARO_ZPZ16_LOG_MULSUB_RES(r[i], _p, a[i], x[i], r[i]);
-			__GIVARO_ZPZ16_LOG_NEG_RES(r[i], _p, r[i]);
+			__GIVARO_ZPZ16_LOG_MULSUB(r[i], _p, a[i], x[i], r[i]);
+			__GIVARO_ZPZ16_LOG_NEG(r[i], _p, r[i]);
 		}
 	}
 
@@ -391,16 +378,15 @@ namespace Givaro {
 		int sign; unsigned long ua;
 		if (a <0) {
 			sign =-1;
-			ua = (unsigned long)-a;
+			ua = -a;
 		}
 		else {
-			ua = (unsigned long)a;
+			ua = a;
 			sign =1;
 		}
-		r = Rep( (ua >=_p) ? ua % _p : ua );
+		r = Rep( (ua >_p) ? ua % _p : ua );
 		if (sign ==-1)
 			r = Rep(_p - r);
-		assert(r < _p);
 		return r = _tab_value2rep[r];
 	}
 
@@ -411,22 +397,19 @@ namespace Givaro {
 
 	inline ZpzDom<Log16>::Rep& ZpzDom<Log16>::init ( Rep& r, const unsigned long a ) const
 	{
-		r = Rep((a >=_p) ? a % _p : a);
-		assert(r < _p);
+		r = Rep((a >_p) ? a % _p : a);
 		return r= _tab_value2rep[r];
 	}
 
 	inline ZpzDom<Log16>::Rep& ZpzDom<Log16>::init ( Rep& r, const unsigned int a ) const
 	{
-		r = Rep((a >=_p) ? a % _p : a);
-		assert(r < _p);
+		r = Rep((a >_p) ? a % _p : a);
 		return r= _tab_value2rep[r];
 	}
 
 	inline ZpzDom<Log16>::Rep& ZpzDom<Log16>::init ( Rep& r, const uint16_t a ) const
 	{
-		r = Rep((a >=_p) ? a % _p : a);
-		assert(r < _p);
+		r = Rep((a >_p) ? a % _p : a);
 		return r= _tab_value2rep[r];
 	}
 
@@ -452,16 +435,13 @@ namespace Givaro {
 			// a = p-b [p]
 			if ( Residu <= (Integer)(-_p) ) tr = int16_t( (-Residu) % _p) ;
 			else tr = int16_t(-Residu);
-			if (tr){
-				assert(_p -(uint16_t)tr < _p);
+			if (tr)
 				return r = _tab_value2rep[ _p - (uint16_t)tr ];
-			}
 			else
-				return r = (Rep) zero;
+				return r = zero;
 		} else {
 			if (Residu >= (Integer)_p ) tr =   int16_t(Residu % _p) ;
 			else tr = int16_t(Residu);
-			assert(tr < _p);
 			return r = _tab_value2rep[tr];
 		}
 	}
@@ -474,28 +454,21 @@ namespace Givaro {
 		unsigned int stride = 1;
 		if ((unsigned long)bound < GIVARO_MAXUINT16)
 			stride = (unsigned int) ( GIVARO_MAXUINT32/((unsigned long)bound * (unsigned long)bound) );
-		uint32_t dot = (uint32_t)zero;
+		uint32_t dot = zero;
 		if ((sz <10) && (sz <stride)) {
 			for(  size_t i= sz; i--; )
 				dot += _tab_rep2value[a[i]] * _tab_rep2value[b[i]];
-			if (dot > _p){
-				assert( (Rep)(dot %_p) < _p);
-				return r = _tab_value2rep[(Rep)(dot % _p)];
-			}
-			else {
-				assert(dot < _p);
-				return r = _tab_value2rep[dot];
-			}
+			if (dot > _p) return r = _tab_value2rep[(Rep)(dot % _p)];
+			else return r = _tab_value2rep[dot];
 
 		}
 		unsigned int i_begin=0;
-		stride &= (unsigned int)~0x1;
+		stride &= ~0x1;
 		if (stride ==0) {
 			for(  size_t i= sz-1; i>0; --i) {
 				dot += _tab_rep2value[a[i]] * _tab_rep2value[b[i]];
 				if (dot>_p) dot %= _p;
 			}
-			assert(dot < _p);
 			return r = _tab_value2rep[dot];
 
 		}
@@ -514,7 +487,6 @@ namespace Givaro {
 			if (dot>_p) dot %= _p;
 			i_begin += (unsigned int) min_sz;
 		} while (i_begin <sz);
-		assert(dot < _p);
 		return r = _tab_value2rep[dot];
 	}
 
@@ -549,10 +521,7 @@ label1:
 			d_2_l tmp;
 			// - normalization: put fractional part at the end of the representation
 			tmp.d = a[i] + offset;
-			{
-				assert((tmp.r[1] >=_p ? tmp.r[1] : tmp.r[1] % _p) < _p);
-			}
-			r[i--] = (Residu_t)_tab_value2rep[(tmp.r[1] >=_p ? tmp.r[1] : tmp.r[1] % _p)];
+			r[i--] = _tab_value2rep[(tmp.r[1] >_p ? tmp.r[1] : tmp.r[1] % _p)];
 		}
 		// while (i!=0)
 		if (i >0) goto label1;
@@ -601,12 +570,11 @@ label1:
 
 	inline std::istream& ZpzDom<Log16>::read (std::istream& s, Rep& a) const
 	{
-		Integer tmp;
+		int tmp; //dpritcha
 		s >> tmp;
 		tmp %= _p;
 		if (tmp < 0) tmp += _p;
-		assert ( (uint)tmp < _p) ;
-		a = _tab_value2rep[ (uint)tmp ];
+		a = _tab_value2rep[tmp];
 		return s;
 	}
 

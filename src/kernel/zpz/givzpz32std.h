@@ -11,9 +11,9 @@
 //
 //  Modified by Pascal Giorgi on 2002/02/13  (pascal.giorgi@ens-lyon.fr)
 
-/*! @file givzpz32std.h
+/*! @file zpz/givzps32std.h
  * @ingroup zpz
- * @brief Arithmetic on \c Z/pZ, with p a prime number less than \f$2^32\f$.
+ * @brief Arithmetic on Z/pZ, with p a prime number less than 2^32.
  *   Modulo typedef is a signed long number. In case it was modified
  *   then Bézout algorithm must be changed (coefficient can be negative).
  */
@@ -30,13 +30,12 @@
 
 
 namespace Givaro {
-
 /*! @brief This class implement the standard arithmetic with Modulo Elements.
  * - The representation of an integer a in Zpz is the value a % p
- * - m max is 46341
  * - p max is 46337
  * .
  */
+
 template<>
 class ZpzDom<Std32> {
 public:
@@ -54,17 +53,17 @@ public:
   // ----- Constantes
   const Rep zero;
   const Rep one;
-  const Rep mOne;
+  const Rep mone;
 
   // ----- Constructor
-  ZpzDom() :
-	  zero(0), one(1), mOne(-1), _p(0), _dp(0.0) {}
+  ZpzDom()
+	  : zero(0), one(1), mone(-1), _p(0), _dp(0.0) {}
 
-  ZpzDom( Residu_t p ) :
-	  zero(0), one(1), mOne((Rep)p-1), _p(p), _dp((double)p) {}
+  ZpzDom( Residu_t p )
+	  : zero(0), one(1), mone(p-1), _p(p), _dp((double)p) {}
 
   ZpzDom( const ZpzDom<Std32>& F)
-	  : zero(F.zero), one(F.one), mOne(F.mOne), _p(F._p), _dp(F._dp) {}
+	  : zero(F.zero), one(F.one), mone(F.mone), _p(F._p), _dp(F._dp) {}
 
 
 
@@ -76,7 +75,7 @@ public:
   {
 	  F.assign(const_cast<Element&>(one),F.one);
 	  F.assign(const_cast<Element&>(zero),F.zero);
-	  F.assign(const_cast<Element&>(mOne),F.mOne);
+	  F.assign(const_cast<Element&>(mone),F.mone);
 
 	  this->_p = F._p;
 	  this->_dp = F._dp;
@@ -214,7 +213,8 @@ public:
   std::ostream& write( std::ostream& s, const Rep a ) const;
 
 protected:
-  // -- Modular inverse, d = a*u + b*v
+  // -- based for modular inverse, d = a*u + b*v
+//   static const int32_t gcdext ( int32_t& u, int32_t& v, const int32_t a, const int32_t b );
   int32_t& gcdext (int32_t& d, int32_t& u, int32_t& v, const int32_t a, const int32_t b ) const;
   int32_t& invext (int32_t& u, const int32_t a, const int32_t b ) const;
 
@@ -225,9 +225,6 @@ protected:
 
     static void Init();
     static void End();
-
-public: static inline Residu_t getMaxModulus() { return 46341; }
-    
 };
 
 } // namespace Givaro

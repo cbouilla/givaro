@@ -8,10 +8,8 @@
 // Authors: T. Gautier
 // $Id: givperf.h,v 1.3 2011-02-02 16:23:56 bboyer Exp $
 // ==========================================================================
-/** @file givperf.h
- * @ingroup system
- * @brief performance analysis
- */
+// Description:
+// - performance analysis
 #ifndef __GIVARO_perf_H
 #define __GIVARO_perf_H
 
@@ -21,7 +19,6 @@
 
 namespace Givaro {
 
-	//! cout counter
 struct __CoutCounter {
   void (*print)(ostream&);
   __CoutCounter( void (*prn)(ostream& ) ) : print(prn)
@@ -39,13 +36,12 @@ struct __CoutCounter {
 
 
 namespace Givaro {
-/*!@internal
- * @brief Class that store a set of counters.
+/*! @brief Class that store a set of counters.
  * - _count_cstor: \#cstor calls except the recopy constructor calls
  * - _count_cstor_recopy: \#recopy cstor calls
  * - _count_assign: \#assignment calls
  * - _count_dstor: \#dstor calls
- * .
+ * *
  */
 
 #define GIVARO_PERF_DEFCLASS(Name,Type)					\

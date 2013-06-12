@@ -1,14 +1,3 @@
-# Copyright(c)'2011 by The Givaro group
-# Written by BB <bboyer@imag.fr>
-# This file is part of Givaro.
-# Givaro is governed by the CeCILL-B license under French law
-# and abiding by the rules of distribution of free software.
-# see the COPYRIGHT file for more details.
-
-
-
-
-
 
 AC_DEFUN([GIV_DOC],
 [
@@ -53,7 +42,6 @@ export PATH=$DOXYGEN_PATH
 AM_CONDITIONAL(GIVARO_DOXYGEN_FOUND,     true)
 AC_MSG_RESULT(yes)
 AM_CONDITIONAL(GIVARO_BUILD_DOC, true)
-
 ],
 [
 AS_IF([(doxygen --version) < /dev/null > /dev/null 2>&1],
@@ -63,19 +51,4 @@ AS_IF([(doxygen --version) < /dev/null > /dev/null 2>&1],
 AC_MSG_RESULT(no)
 AM_CONDITIONAL(GIVARO_BUILD_DOC, false)
 ])
-
-AC_MSG_CHECKING(whether dot works)
-res=yes;
-(dot -V) < /dev/null > /dev/null 2>&1 || res=no
-AC_MSG_RESULT([$res])
-AS_IF([test $res = yes],
-[
-sed 's/^HAVE_DOT.*/HAVE_DOT = YES/' docs/Doxyfile.mod > docs/Doxyfile
-sed 's/^HAVE_DOT.*/HAVE_DOT = YES/' docs/DoxyfileDev.mod > docs/DoxyfileDev
-],
-[ cp docs/Doxyfile.mod docs/Doxyfile ;
-cp docs/DoxyfileDev.mod docs/DoxyfileDev
-])
-
-
 ])

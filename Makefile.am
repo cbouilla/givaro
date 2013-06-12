@@ -40,15 +40,11 @@ DISTCLEANFILES = src/kernel/system/givaro   \
 				 src/library/tools/givaro   \
 				 src/library/vector/givaro
 
-uninstall-hook:
-	(test -d "$(includedir)/givaro" && rmdir "$(includedir)/givaro") || true
-	(test -d "$(includedir)/gmp++" && rmdir "$(includedir)/gmp++") || true
 
+# docs_dev:docs/givaro-dev-html/index.html
 
-docs_dev:docs/givaro-dev-html/index.html
+#  doc/givaro-dev-html/index.html:
+#  (cd docs; make docs_dev)
 
-docs/givaro-dev-html/index.html:
-	(cd docs; make docs_dev)
-
-VERSION=3.7.2
+VERSION=3.5.0
 

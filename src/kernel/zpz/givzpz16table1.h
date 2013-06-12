@@ -11,7 +11,7 @@
 //
 //  Modified by Pascal Giorgi on 2002/02/13  (pascal.giorgi@ens-lyon.fr)
 
-/*! @file givzpz16table1.h
+/*! @file zpz/givzpz16table1.h
  * @ingroup zpz
  * @brief  Arithmetic on Z/pZ, with tabulation of operations.
  */
@@ -70,7 +70,7 @@ public:
         return x = Rep((a >= _p)?0:_tab_rep2value[a]);
     }
     uint16_t& convert( uint16_t& x , const Rep a) const {
-        return x = Residu_t((a >= _p)?0:_tab_rep2value[a]);
+        return x = Rep((a >= _p)?0:_tab_rep2value[a]);
     }
     unsigned long & convert( unsigned long& x , const Rep a) const {
         return x = ((a >= _p)?0:_tab_rep2value[a]);
@@ -231,10 +231,8 @@ public:
  // ----- Constantes
   const Element zero;
   const Element one;
-  const Element mOne;
+  const Element mone;
 
-public: static inline Residu_t getMaxModulus() { return 16381; }
-    
 
 };
 

@@ -8,10 +8,7 @@
 // Authors: T. Gautier
 // $Id: givpoly1.h,v 1.3 2011-02-02 16:23:56 bboyer Exp $
 // ==========================================================================
-/** @file givpoly1.h
- * @ingroup poly1
- * @brief NO DOC
- */
+// Description:
 #ifndef __GIVARO_poly1_H
 #define __GIVARO_poly1_H
 

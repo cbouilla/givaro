@@ -8,11 +8,6 @@
 // Authors: M. Samama, T. Gautier
 // $Id: givrational.h,v 1.13 2011-02-02 16:23:56 bboyer Exp $
 // ==========================================================================
-/*! @file givrational.h
- * @ingroup rational
- * @brief Rationals (and domain)
- * NO DOC.
- */
 #ifndef __GIVARO_rational_H
 #define __GIVARO_rational_H
 // #define __GIVARO_GMPplusplus_rational_H
@@ -43,8 +38,8 @@ int isInteger(const Rational& r);
 
 class RationalDom;
 
+// ----------------------------------- Class Rational
 
-//! Rationals. No doc.
 class Rational {
 
 public :
@@ -60,12 +55,6 @@ public :
     Rational(const Integer& n) ;
     Rational(const Integer& n, const Integer& d, int red = 1 ) ;
         // Rational number reconstruction
-	/*! @brief Rational number reconstruction.
-	 * \f$ num/den \equiv f \mod m\f$, with \f$|num|<k\f$ and \f$0 < |den| \leq f/kf\f$
-	 * @bib
-	 * - von zur Gathen & Gerhard <i>Modern Computer Algebra</i>, 5.10, Cambridge Univ. Press 1999]
-	 */
-
     Rational(const Integer& f, const Integer& m, const Integer& k, bool recurs = false ) ;
     Rational(const Rational&) ;
         //~Rational();
@@ -73,7 +62,7 @@ public :
         // Predefined cstes
     static const Rational zero ;
     static const Rational one ;
-    static const Rational mOne ;
+    static const Rational mone ;
 
         // Logical and physical copies
     Rational& operator = (const Rational& );
@@ -88,16 +77,14 @@ public :
 //----------------Elementary arithmetic between Rational
     Rational operator + (const Rational& r) const ;
     Rational operator - (const Rational& r) const ;
-    Rational operator - () const ;
-    Rational operator + () const ;
+    Rational operator -() const ;
+    Rational operator +() const ;
     Rational operator * (const Rational& r) const ;
     Rational operator / (const Rational &r) const ;
     Rational& operator += (const Rational& r) ;
     Rational& operator -= (const Rational& r) ;
     Rational& operator *= (const Rational& r) ;
     Rational& operator /= (const Rational &r) ;
-
-    Integer operator % (const Integer &r) const;
 
 //-----------------------------------------Arithmetic functions
     friend const Rational pow(const Rational &r, const long l);
@@ -179,29 +166,25 @@ public:
 }; // ----------------------------------- End of Class Rationalional
 
 extern std::istream& operator>> (std::istream& in, Rational& r) ;
-}
-
 
 #include "givaro/givrational.inl"
 
-namespace Givaro {
-
-//! Rational Domain
+//------------------------------------------------------ Class RationalDom
 class RationalDom  {
 public:
     typedef Rational Element;
     typedef Rational Rep;
 
         // -- Cstor
-    RationalDom() : one(1), mOne(-one), zero(0) {}
-    template<class X> RationalDom(const X& x) : one(1), mOne(-one),zero(0) {}
+    RationalDom() : one(1), mone(-one), zero(0) {}
+    template<class X> RationalDom(const X& x) : one(1), mone(-one),zero(0) {}
 
     int operator==( const RationalDom& ) const { return 1;}
     int operator!=( const RationalDom& ) const { return 0;}
 
         // -- Constants
     const Rational one;
-    const Rational mOne;
+    const Rational mone;
     const Rational zero;
 
     unsigned long characteristic() const { return 0UL; }

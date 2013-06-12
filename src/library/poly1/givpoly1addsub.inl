@@ -102,74 +102,24 @@ return R;
 }
 
 template <class Domain>
-inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::addin
- (Rep& R, const Type_t& Val) const
-{
-  size_t sR = R.size();
-  if (sR == 0)  {
-      R.reallocate(1);
-      _domain.assign(R[0],Val);
-  } else
-      _domain.addin(R[0],Val);
-  return R;
-}
-
-template <class Domain>
-inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::subin (
-    Rep& R, const typename Rep::iterator Rbeg,
-    const Rep& P, const typename Rep::const_iterator Pbeg, const typename Rep::const_iterator Pend) const
-{
-    // PRECONDITION: NO reallocation, R MUST be of larger degree than P
-    typename Rep::iterator ri=Rbeg;
-    typename Rep::const_iterator pi=Pbeg;
-    for( ; pi != Pend; ++pi, ++ri) _domain.subin(*ri,*pi);
-    return R;
-}
-
-template <class Domain>
-inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::subin (
-    Rep& R,
-    const Rep& P, const typename Rep::const_iterator Pbeg, const typename Rep::const_iterator Pend) const
-{
-    // PRECONDITION: P of larger degree than R
-    size_t sP = (size_t)(Pend-Pbeg);
-    size_t sR = R.size();
-    Rep tmp; tmp.reallocate(sP);
-    size_t i;
-    typename Rep::const_iterator pi=Pbeg;
-    for (i=0; i<sR; ++i, ++pi) _domain.sub(tmp[i], R[i], *pi);
-    for (; pi != Pend; ++i, ++pi) _domain.neg(tmp[i], *pi);
-    setdegree(tmp);
-    R.copy(tmp);
-    return R;
-}
-
-template <class Domain>
-inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::subin (
-    Rep& R, const typename Rep::iterator Rbeg, const typename Rep::iterator Rend,
-    const Rep& P, const typename Rep::const_iterator Pbeg, const typename Rep::const_iterator Pend) const{
-  size_t sP = (size_t) (Pend-Pbeg);
-  size_t sR = (size_t)(Rend-Rbeg);
-  if (sP == 0) return R;
-  if (sR < sP) {
-      return subin(R, P, Pbeg, Pend);
-  }
-  else {
-      return subin(R, Rbeg, P, Pbeg, Pend);
-  }
-}
-
-template <class Domain>
 inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::subin (Rep& R, const Rep& P) const
 {
   size_t sP = P.size();
   size_t sR = R.size();
   if (sP == 0) return R;
   if (sR == 0) { return neg(R,P); }
-  if (sR < sP)
-      return setdegree( subin(R, P, P.begin(), P.end()) );
-  else
-      return setdegree( subin(R, R.begin(), P, P.begin(), P.end()) );
+//   if (sR == sP){ _supportdomain.subin(R,P); return; }
+  if (sR < sP) {
+    size_t i;
+    Rep tmp; tmp.reallocate(sP);
+    for (i=0; i<sR; ++i) _domain.sub(tmp[i], R[i], P[i]);
+    for (; i<sP; ++i) _domain.neg(tmp[i], P[i]);
+    R.logcopy(tmp);
+  }
+  else {
+    for (size_t i=0; i<sP; ++i) _domain.subin(R[i], P[i]);
+  }
+return R;
 }
 
 template <class Domain>
@@ -212,19 +162,6 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::sub
     assign(R, P);
     _domain.sub(R[0],P[0],Val);
   }
-  return R;
-}
-
-template <class Domain>
-inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::subin
- (Rep& R, const Type_t& Val) const
-{
-  size_t sR = R.size();
-  if (sR == 0)  {
-      R.reallocate(1);
-      _domain.neg(R[0],Val);
-  } else
-      _domain.subin(R[0],Val);
   return R;
 }
 

@@ -11,7 +11,7 @@
 //
 //  Modified by Pascal Giorgi on 2002/02/13  (pascal.giorgi@ens-lyon.fr)
 
-/*! @file givzpz32uns.h
+/*! @file zpz/givzpz32uns.h
  * @ingroup zpz
  * @brief    Arithmetic on Z/pZ, with p a prime number less than 2^32.
  *   Modulo typedef is a signed long number. In case it was modified
@@ -31,10 +31,9 @@ namespace Givaro {
 
 /*! @brief This class implement the standard arithmetic with Modulo Elements.
  * - The representation of an integer a in Zpz is the value a % p
- * - m max is 65536
- * - p max is 65521
  * .
  */
+
 template<>
 class ZpzDom<Unsigned32> {
 public:
@@ -52,7 +51,7 @@ public:
   // ----- Constantes
   const Rep zero;
   const Rep one;
-  const Rep mOne;
+  const Rep mone;
 
   // ----- Constructor
   ZpzDom();
@@ -66,7 +65,7 @@ public:
   {
 	  F.assign(const_cast<Element&>(one),F.one);
 	  F.assign(const_cast<Element&>(zero),F.zero);
-	  F.assign(const_cast<Element&>(mOne),F.mOne);
+	  F.assign(const_cast<Element&>(mone),F.mone);
 
 
 	  this->_p = F._p;
@@ -228,9 +227,6 @@ protected:
 
     static void Init();
     static void End();
-
-public: static inline Residu_t getMaxModulus() { return 65536; }
-    
 };
 
 } // namespace Givaro

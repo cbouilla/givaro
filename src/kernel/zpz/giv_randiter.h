@@ -4,14 +4,9 @@
 // Givaro is governed by the CeCILL-B license under French law
 // and abiding by the rules of distribution of free software.
 // see the COPYRIGHT file for more details.
+// Givaro field Elements generator
 // Author : Giorgi Pascal   pascal.giorgi@ens-lyon.fr
 //==================================================================
-
-/** @file giv_randiter.h
- * @ingroup zpz
- * @brief NO DOC
- * Givaro field Elements generator
- */
 
 #ifndef __GIVARO_randiter_H
 #define __GIVARO_randiter_H
@@ -19,17 +14,17 @@
 
 #include "givaro/givinteger.h"
 #include "givaro/givrandom.h"
-#include "givaro/givzpztypes.h"
 
 namespace Givaro {
 
-template<class TAG> class ZpzDom ;
+template<class TAG>
+class ZpzDom ;
 
 // -- Tag for arithmetic:
-struct Std16 /*{public: typedef  int16_t type;}*/ ; // -- standard arithmetic over 16bits representations.
-struct Std32 /*{public: typedef int32_t type;}*/ ; // -- standard arithmetic over 32bits representations.
+class Std16 /*{public: typedef  int16_t type;}*/ ; // -- standard arithmetic over 16bits representations.
+class Std32 /*{public: typedef int32_t type;}*/ ; // -- standard arithmetic over 32bits representations.
 
-struct Log16 ; // -- log arithmetic over 16bits representations.
+class Log16 ; // -- log arithmetic over 16bits representations.
 
 template<> class ZpzDom<Std16>;
 template<> class ZpzDom<Std32>;
@@ -41,8 +36,8 @@ template<class TT> class GFqDom;
  *   throught a template argument as a field.
  *   The random generator used is the givrandom.
  */
-template <class Field , class Type>
-	class GIV_randIter
+
+template <class Field , class Type> class GIV_randIter
 {
   public:
 
@@ -156,6 +151,9 @@ template <class Field , class Type>
     //@} Common Object Iterface
 
     /** @name Implementation-Specific Methods.
+     * These methods are not required of all
+     * \Ref{LinBox Random field Element generators}
+     * and are included only for this implementation of the archetype.
      */
     //@{
 

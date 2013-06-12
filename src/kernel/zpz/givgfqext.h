@@ -5,18 +5,15 @@
 // and abiding by the rules of distribution of free software.
 // see the COPYRIGHT file for more details.
 // file: givgfqext.h
-// Time-stamp: <07 May 12 15:08:17 Jean-Guillaume.Dumas@imag.fr>
+// Time-stamp: <29 Sep 09 18:10:13 Jean-Guillaume.Dumas@imag.fr>
 // date: 2007
 // version:
 // author: Jean-Guillaume.Dumas
 
-/*! @file givgfqext.h
- * @ingroup zpz
- * @brief   Arithmetic on GF(p^k), with p a prime number less than 2^15.
+/*! @brief   Arithmetic on GF(p^k), with p a prime number less than 2^15.
  *   Specialized for fast conversions to floating point numbers.
  *  Main difference in interface is init/convert.
- * @bib
- * - JG Dumas, <i>Q-adic Transform Revisited</i>, ISSAC 2008
+ * @bib  [JG Dumas, Q-adic Transform Revisited, ISSAC 2008]
  *  @warning k strictly greater than 1
  */
 
@@ -38,7 +35,6 @@ namespace Givaro {
 	template<class TT> class GFqExt;
 
 
-	//! GFq Ext
 	template<class TT> class GFqExtFast : public GFqDom<TT> {
 	protected:
 		typedef typename Signed_Trait<TT>::unsigned_type UTT;
@@ -89,21 +85,6 @@ namespace Givaro {
 
 		}
 
-		// Extension MUST be a parameter of the constructor
-        template<typename Vector>
-		GFqExtFast( const UTT P, const UTT e, const Vector& modPoly) : Father_t(P,e, modPoly),
-		_BITS( std::numeric_limits< double >::digits/( (e<<1)-1) ),
-		_BASE(1 << _BITS),
-		_MASK( _BASE - 1),
-		_maxn( _BASE/(P-1)/(P-1)/e),
-		_degree( e-1 ),
-		balanced(false)
-		{
-			GIVARO_ASSERT(_maxn>0 , "[GFqExtFast]: field too large");
-			builddoubletables();
-
-		}
-
 		virtual ~GFqExtFast() {};
 
 		Self_t operator=( const Self_t& F)
@@ -140,21 +121,21 @@ namespace Givaro {
 		// Accesses
 
 		UTT bits() const
-		{ return _BITS;}
+{ return _BITS;}
 		UTT base() const
-		{ return _BASE;}
+{ return _BASE;}
 		UTT mask() const
-		{ return _MASK;}
+{ return _MASK;}
 		UTT maxdot() const
-		{ return _maxn; }
+{ return _maxn; }
 		UTT& characteristic(UTT& a) const
-		{ return a=this->_characteristic; }
+{ return a=this->_characteristic; }
 		UTT characteristic() const
-		{ return this->_characteristic; }
+{ return this->_characteristic; }
 		const bool balanced;
 
 		Rep& init( Rep& r, const unsigned long l) const
-		{
+{
 			return Father_t::init(r,l);
 		}
 
@@ -163,28 +144,25 @@ namespace Givaro {
 
 
 		virtual double& convert(double& d, const Rep a) const
-		{
-			return d=_log2dbl[(size_t)a];
+{
+			return d=_log2dbl[a];
 		}
 
 		virtual float& convert(float& d, const Rep a) const
-		{
-			return d=(float)_log2dbl[(size_t)a];
+{
+			return d=(float)_log2dbl[a];
 		}
 
 		virtual Rep& init(Rep& pad, const double d) const
-		{
-			GIVARO_ASSERT(d>=0.0 , "[GFqExtFast]: init from a negative number");
-			GIVARO_ASSERT(d<_MODOUT, "[GFqExtFast]: init from a too large number");
+{
 			// WARNING WARNING WARNING WARNING
 			// Precondition : 0 <= d < _MODOUT
 			// Can segfault if d is too large
 			// WARNING WARNING WARNING WARNING
-			uint64_t rll( static_cast<uint64_t>(d) );
-			uint64_t tll( static_cast<uint64_t>(d/this->_dcharacteristic) );
+			unsigned __GIVARO_INT64 rll( static_cast<__GIVARO_INT64>(d) );
+			unsigned __GIVARO_INT64 tll( static_cast<__GIVARO_INT64>(d/this->_dcharacteristic) );
 			UTT prec(0);
 			UTT padl = (UTT)(rll - tll*this->_characteristic);
-  
 			if (padl == this->_characteristic) {
 				padl -= this->_characteristic;
 				tll += 1;
@@ -198,7 +176,7 @@ namespace Givaro {
 				padl ^= prec;
 			}
 
-			pad = (Rep)prec;
+			pad = prec;
 			for(size_t j = 0;j<_degree;++j) {
 				rll >>= _BITS;
 				tll >>= _BITS;
@@ -208,20 +186,17 @@ namespace Givaro {
 				pad ^= prec;
 			}
 
-			padl = this->_low2log[(size_t)padl];
-			pad = (Rep)this->_high2log[(size_t)pad];
-			return this->addin(pad,(Rep)padl);
+			padl = this->_low2log[padl];
+			pad = this->_high2log[pad];
+			return this->addin(pad,padl);
 		}
 
 		virtual Rep& init(Rep& pad, const float d) const
-		{
+{
 			return init(pad, (double)d);
 		}
 
 
-		template<class RandIter> Rep& random(RandIter& g, Rep& r) const {
-			return init(r, static_cast<double>( (UTT)g() % _MODOUT));
-		}
 
 
 	protected:
@@ -246,7 +221,7 @@ namespace Givaro {
 
 			Element xkmu;
 			// This is X
-			xkmu = (Element)this->_pol2log[(size_t)this->_characteristic];
+			xkmu = this->_pol2log[this->_characteristic];
 			// This is X^{e-1}
 			dom_power(xkmu,xkmu,this->_exponent-1,*this);
 
@@ -294,18 +269,18 @@ namespace Givaro {
 				}
 
 				PAD.eval(tmp , low_ui );
-				_low2log[binpolit] = this->_pol2log[(size_t)tmp];
+				_low2log[binpolit] = this->_pol2log[tmp];
 
 				low_ui.push_back(cour);
 				PAD.eval( tmp, low_ui);
-				Father_t::mul((Element&)_high2log[(size_t)binpolit],(Element)this->_pol2log[(size_t)tmp], xkmu);
+				Father_t::mul((Element&)_high2log[binpolit],(Element)this->_pol2log[tmp], xkmu);
 			}
 		}
 	};
 
 
 
-	//! GFq Ext (other)
+
 	template<class TT> class GFqExt : public GFqExtFast<TT> {
 	protected:
 		typedef typename Signed_Trait<TT>::unsigned_type UTT;
@@ -342,7 +317,7 @@ namespace Givaro {
 		using Father_t::init;
 
 		virtual Rep& init(Rep& pad, const double d) const
-		{
+{
 			// Defensive init
 			const double tmp(fmod(d,this->_fMODOUT));
 			return DirectFather_t::init(pad, (tmp>0.0)?tmp:(tmp+_fMODOUT) );

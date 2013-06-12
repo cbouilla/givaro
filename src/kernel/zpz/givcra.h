@@ -9,7 +9,7 @@
 // $Id: givcra.h,v 1.12 2011-02-02 16:23:56 bboyer Exp $
 // ==========================================================================
 
-/*!@file givcra.h
+/*!@file zpz/givcra.h
  * @ingroup zpz
  * @brief  Chinese Remainder Algorithm for 2 Elements.
  * @sa
@@ -24,7 +24,6 @@
 
 namespace Givaro {
 
-	//! CRA
 template<class Ring, class Domain, bool REDUCE = true>
 struct ChineseRemainder {
     typedef typename Ring::Element   RingElement;
@@ -61,9 +60,8 @@ private:
     RingElement C_12;
 };
 
-//! CRA2.
-//! JGD 05.12.2007: not required anymore ...
-
+// JGD 05.12.2007: not required anymore ...
+//template<>
 template<class Ring, class Domain>
 struct ChineseRemainder<Ring, Domain, false>  {
     typedef typename Ring::Element   RingElement;

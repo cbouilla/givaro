@@ -18,7 +18,6 @@ pkginclude_HEADERS=     \
 	givzpz32std.h		\
 	givzpz32uns.h		\
 	givzpzInt.h		    \
-	givzpzGen.h		    \
 	givzpz64std.h		\
 	givprimes16.h		\
 	givrns.h		    \
@@ -35,7 +34,6 @@ pkginclude_HEADERS=     \
 	givzpz32std.inl		\
 	givzpz32uns.inl		\
 	givzpzInt.inl		\
-	givzpzGen.inl		\
 	givzpz64std.inl		\
 	givrnsfixed.inl		\
 	givrnscstor.inl		\
@@ -51,9 +49,8 @@ libgivzpz_la_SOURCES=   \
 	givzpz32std.C		\
 	givzpz32uns.C		\
 	givmontg32.C		\
+	givzpzInt.C		    \
 	givzpz64std.C		\
 	givprimes16.C		\
 	givtablelimits.C	\
 	givzpz16table1.C
-
-EXTRA_DIST=zpz.doxy

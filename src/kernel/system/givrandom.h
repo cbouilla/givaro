@@ -4,16 +4,16 @@
 // Givaro is governed by the CeCILL-B license under French law
 // and abiding by the rules of distribution of free software.
 // see the COPYRIGHT file for more details.
-// Time-stamp: <04 Jun 12 14:31:40 Jean-Guillaume.Dumas@imag.fr>
+// Givaro : random generator
+// a la Linbox ...
+// Time-stamp: <13 Jul 07 14:40:27 Jean-Guillaume.Dumas@imag.fr>
 // =================================================================== //
 
-/*! @file givrandom.h
+/*! @file system/givrandom.h
  * @ingroup system
  * @brief NO DOC
- * @bib
- *   - Fishman, GS <i>Multiplicative congruential random
- * number generators...</i> Math. Comp. 54:331-344 (1990).
- *
+ * @bib Fishman, G.S. "Multiplicative congruential random
+ * number generators ..." Math. Comp. 54:331-344 (1990)
  */
 
 #ifndef __GIVARO_random_H
@@ -36,7 +36,6 @@ extern "C" {
 
 namespace Givaro {
 
-	//! GivRandom
 class GivRandom {
     mutable unsigned long _seed;
 public:
@@ -48,7 +47,7 @@ public:
         if (! s) {
 		struct timeval tp;
 		gettimeofday(&tp, 0) ;
-		_seed = (unsigned long)(tp.tv_usec);
+		_seed = (long)(tp.tv_usec);
 	}
     }
 
@@ -67,21 +66,13 @@ public:
 	    return _seed;
     }
 
-
-    unsigned long max_rand() const
-    {   
-        return _GIVRAN_MODULO_;
-    }
-    
-
-// #if defined(__GIVARO_INT64)
-#if 1
+#if defined(__GIVARO_INT64)
     unsigned long operator() () const
     {
         return _seed = (unsigned long)(
-            (int64_t)_GIVRAN_MULTIPLYER_
-            * (int64_t)_seed
-            % (int64_t)_GIVRAN_MODULO_ );
+            (__GIVARO_INT64)_GIVRAN_MULTIPLYER_
+            * (__GIVARO_INT64)_seed
+            % (__GIVARO_INT64)_GIVRAN_MODULO_ );
     }
 #else
     unsigned long operator() () const

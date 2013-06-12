@@ -8,10 +8,8 @@
 // Authors: T. Gautier
 // $Id: givindeter.h,v 1.6 2011-02-02 16:23:56 bboyer Exp $
 // ==========================================================================
-/** @file givindeter.h
- * @ingroup poly1
- * @brief indeterminates for polynomial manipulation
- */
+// Description:
+// - indeterminates for polynomial manipulation
 #ifndef __GIVARO_indeter_H
 #define __GIVARO_indeter_H
 
@@ -20,7 +18,6 @@
 
 namespace Givaro {
 
-	//! Indeterminate
 class Indeter {
 public :
 
@@ -52,8 +49,7 @@ protected:
   std::string name;
 };
 
-
-  //! @bug put elsewere. Inline members functions :
+  // Inline members functions :
 inline int operator==(const Indeter& i1, const Indeter &i2)
   { return i1.compare(i2) ==0; }
 

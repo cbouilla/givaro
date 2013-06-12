@@ -271,10 +271,10 @@ inline  Montgomery<Std32>::Rep&  Montgomery<Std32>::init ( Rep& r, const long a 
   if (a <0)
   {
 	  sign =-1;
-	  ua = (unsigned long) -a;
+	  ua = -a;
   }
   else {
-	  ua = (unsigned long)a;
+	  ua = a;
 	  sign =1;
   }
   r =Rep ( ua >= (uint32_t)_p ? ua % (uint32_t)_p : ua);
@@ -400,9 +400,8 @@ inline std::ostream& Montgomery<Std32>::write (std::ostream& s ) const
 
 inline std::istream& Montgomery<Std32>::read (std::istream& s, Rep& a) const
 {
-  Integer tmp;
-  s >> tmp;
-  init(a, tmp);
+  s >> a;
+  init(a, a);
   return s;
 }
 

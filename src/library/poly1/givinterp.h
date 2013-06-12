@@ -8,12 +8,7 @@
 // Authors: JG Dumas
 // $Id: givinterp.h,v 1.3 2011-02-02 16:23:56 bboyer Exp $
 // ==========================================================================
-
-/** @file givinterp.h
- * @ingroup poly1
- * @brief NO DOC
- */
-
+// Description:
 #ifndef __GIVARO_interpolation_H
 #define __GIVARO_interpolation_H
 
@@ -23,7 +18,6 @@
 
 namespace Givaro {
 
-	//! Interpolation
 template<class Domain, bool REDUCE = true>
 struct Interpolation : Poly1Dom<Domain,Dense>  {
     typedef std::vector< typename Domain::Element > Vect_t;

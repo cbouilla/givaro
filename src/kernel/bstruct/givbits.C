@@ -189,14 +189,14 @@ long Bits::numone() const
 void Bits::indexofone( Array0<base>& index) const
 {
   size_t l = rep.size();
-  index.allocate( (size_t) numone() );
+  index.allocate( numone() );
   long num =0;
   for (int i=0; i<int(l); ++i)
   {
     int quo = QUO(i);
     int rem = REM(i);
     if (((rep[quo] & Table2pow[rem]) >> rem) !=0)
-		index[int(num++)] = (base)i;
+		index[int(num++)] = i;
   }
 }
 
@@ -241,8 +241,7 @@ int Bits::get (const int i) const
 void Bits::set()
 {
   int len = (int) rep.size();
-  for (int i=0; i< len; ++i)
-	  rep[i] = (base) ~0L;
+  for (int i=0; i< len; ++i) rep[i] = ~0L;
 }
 
   // Set the i-th bit of *this

@@ -8,10 +8,10 @@
 // Givaro : Modular square roots
 // =================================================================== //
 
-/*! @file tests/test-modsqroot.C
+/*! @file examples/Integer/ModularSquareRoot.C
  * @ingroup examples
  * @ingroup integers
- * @see examples/Integer/ModularSquareRoot.C
+ * @example examples/Integer/ModularSquareRoot.C
  * @brief NO DOC
  */
 #include <iostream>
@@ -43,7 +43,7 @@ bool TestSrqtMod(const Integer& z, const Integer& n) {
 int main(int argc, char** argv) {
     int nbtests = (argc>1?atoi(argv[1]):100);
     int sizes = (argc>2?atoi(argv[2]):10);
-    unsigned long seed = (unsigned long)(argc>3?(unsigned long)atoi(argv[3]):(unsigned long)BaseTimer::seed ());
+    unsigned long seed = (argc>3?atoi(argv[3]):BaseTimer::seed ());
     int failures = 0;
 //     std::cerr << "Seed: " << seed << std::endl;
     Integer::seeding (seed);

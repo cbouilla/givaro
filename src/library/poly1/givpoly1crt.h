@@ -6,13 +6,8 @@
 // see the COPYRIGHT file for more details.
 // Authors: J-G Dumas
 // Time-stamp: <06 May 10 13:47:28 Jean-Guillaume.Dumas@imag.fr>
+// Description: Polynomial Chinese Remaindering of degree 1
 // ==========================================================================
-
-/** @file givpoly1crt.h
- * @ingroup poly1
- * @brief Polynomial Chinese Remaindering of degree 1
- */
-
 #ifndef __GIVARO_poly1_crt_H
 #define __GIVARO_poly1_crt_H
 #include <givaro/givpoly1.h>
@@ -20,8 +15,6 @@
 #include <vector>
 
 namespace Givaro {
-
-	//! Poly1 CRT
 template<class Field>
 class Poly1CRT  {
     typedef Poly1CRT<Field> 			Self_t;

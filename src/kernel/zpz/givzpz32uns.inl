@@ -55,11 +55,11 @@
 namespace Givaro {
 
 	inline ZpzDom<Unsigned32>::ZpzDom( ) :
-		zero(0), one(1), mOne(0), _p(0), _dp(0.0)
+		zero(0), one(1), mone(0), _p(0), _dp(0.0)
 	{}
 
 	inline ZpzDom<Unsigned32>::ZpzDom( Residu_t p ) :
-		zero(0), one(1), mOne(Rep(p-1)),_p(p), _dp((double)p)
+		zero(0), one(1), mone(Rep(p-1)),_p(p), _dp((double)p)
 
 	{}
 
@@ -69,7 +69,7 @@ namespace Givaro {
 	}
 
 	inline ZpzDom<Unsigned32>::ZpzDom(const ZpzDom<Unsigned32>& F) :
-		zero(F.zero), one(F.one), mOne(F.mOne), _p(F._p), _dp(F._dp)
+		zero(F.zero), one(F.one), mone(F.mone), _p(F._p), _dp(F._dp)
 	{ }
 
 	inline ZpzDom<Unsigned32>::Rep& ZpzDom<Unsigned32>::mul (Rep& r, const Rep a, const Rep b) const
@@ -377,10 +377,10 @@ namespace Givaro {
 		unsigned long ua;
 		if (a <0) {
 			sign =-1;
-			ua = (unsigned long)-a;
+			ua = -a;
 		}
 		else {
-			ua = (unsigned long)a;
+			ua = a;
 			sign =1;
 		}
 		r = Rep( (ua >=_p) ? ua % _p : ua );
@@ -513,7 +513,7 @@ namespace Givaro {
 				return r = (Rep)dot;
 		}
 		size_t i_begin=0;
-		stride &= (unsigned int)~0x1;
+		stride &= ~0x1;
 		if (stride ==0) {
 			for(  size_t i= sz; --i; ) {
 				dot += a[i] * b[i];
@@ -583,7 +583,7 @@ namespace Givaro {
 	inline ZpzDom<Unsigned32>::Rep&  ZpzDom<Unsigned32>::dotprod
 	( Rep& r, const size_t sz, constArray a, constArray b ) const
 	{
-		return ZpzDom<Unsigned32>::dotprod(r, (int)_p, sz, a, b);
+		return ZpzDom<Unsigned32>::dotprod(r, _p, sz, a, b);
 	}
 
 
@@ -655,9 +655,8 @@ namespace Givaro {
 
 	inline std::istream& ZpzDom<Unsigned32>::read (std::istream& s, Rep& a) const
 	{
-		Integer tmp;
-		s >> tmp;
-		init(a, tmp);
+		s >> a;
+		init(a, a);
 		return s;
 	}
 

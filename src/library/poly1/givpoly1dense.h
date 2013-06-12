@@ -8,11 +8,8 @@
 // Authors: T. Gautier
 // $Id: givpoly1dense.h,v 1.29 2011-02-02 16:23:56 bboyer Exp $
 // ==========================================================================
-/** @file givpoly1dense.h
- * @ingroup poly1
- * @brief univariate polynomial over T.
- * we assume that T is a ring (0,1,+,*)
- */
+// Description: univariate polynomial over T
+// - we assume that T is a ring (0,1,+,*)
 #ifndef __GIVARO_poly1_dense_H
 #define __GIVARO_poly1_dense_H
 
@@ -29,7 +26,6 @@
 
 namespace Givaro {
 
-	//! givvector
 	template < typename T, typename A=std::allocator<T> >
 	class givvector : public __GIV_STANDARD_VECTOR<T,A> {
 		typedef givvector<T,A>     Self_t;
@@ -96,17 +92,16 @@ namespace Givaro {
 		}
 
 
-		//! @warning we have no field in Vectors so << is RAW.
             friend std::ostream& operator<<(std::ostream& out, const Self_t& V) {
                 out << '[';
                 for(typename Self_t::const_iterator it=V.begin(); it!= V.end(); ++it)
-		    out << *it << ' ';
+                    out << *it << ' ';
                 return out << ']';
             }
 
 	};
 
-	//!  Class Poly1Dom
+	//  -------------------------------------------- Class Poly1Dom<Domain>
 	template <class Domain>
 	class Poly1Dom<Domain,Dense> {
 	protected:  //  -- Representation
@@ -138,7 +133,7 @@ namespace Givaro {
 		Poly1Dom (const Self_t&);
 		Type_t characteristic() const
 		{
-			return (Type_t)_domain.characteristic();
+			return _domain.characteristic();
 		}
 		Integer& characteristic( Integer& p) const
 		{
@@ -173,32 +168,16 @@ namespace Givaro {
 		{
 			return _domain;
 		}
-
 		Domain& setdomain(const Domain& D)
 		{
 			return _domain = D;
 		}
 
-		// -- Return the domain of the entries
-		const Domain& subDomain() const
-		{
-			return _domain;
-		}
-		// -- Return the domain of the entries
-		const Domain& getDomain() const
-		{
-			return _domain;
-		}
-
-		Domain& setDomain(const Domain& D)
-		{
-			return _domain = D;
-		}
 
 		// -- Constantes
 		Rep zero;
 		Rep one;
-		Rep mOne;
+		Rep mone;
 
 		// -- Init polynomial
 		Rep& init(Rep& a) const;
@@ -254,7 +233,6 @@ namespace Givaro {
 
 		// -- Returns the i-th coefficients
 		Type_t& getEntry(Type_t& c, const Degree& i, const Rep& P) const;
-		Type_t  setEntry(Rep &P, const Type_t&c, const Degree&i) const;
 
 		// -- Returns the degree of polynomial
 		Degree& degree(Degree& d, const Rep& P) const;
@@ -269,7 +247,6 @@ namespace Givaro {
 		 * @param P polynomial
 		 */
 		Rep& setdegree( Rep& P ) const;
-		Rep& setDegree( Rep& P ) const { return setdegree(P); }
 
 		// -- Evaluation on one point.
 		Type_t& eval(Type_t& pval, const Rep& P, const Type_t& val) const;
@@ -290,13 +267,11 @@ namespace Givaro {
 
 		// -- Arithmetics operators
 		Rep& addin ( Rep& res, const Rep& u ) const;
-		Rep& addin ( Rep& res, const Type_t& val ) const;
 		Rep& add ( Rep& res, const Rep& u, const Rep& v ) const;
 		Rep& add ( Rep& res, const Rep& u, const Type_t& val ) const;
 		Rep& add ( Rep& res, const Type_t& val, const Rep& v ) const;
 
 		Rep& subin ( Rep& res, const Rep& u ) const;
-		Rep& subin ( Rep& res, const Type_t& val ) const;
 		Rep& sub ( Rep& res, const Rep& u, const Rep& v ) const;
 		Rep& sub ( Rep& res, const Rep& u, const Type_t& val ) const;
 		Rep& sub ( Rep& res, const Type_t& val, const Rep& v ) const;
@@ -306,21 +281,13 @@ namespace Givaro {
 
 		Rep& mulin ( Rep& q, const Rep& a ) const;
 		Rep& mulin ( Rep& q, const Type_t& a ) const;
+		Rep& mul   ( Rep& q, const Rep& a, const Rep& b ) const;
 		Rep& mul   ( Rep& q, const Type_t& a, const Rep& b ) const;
 		Rep& mul   ( Rep& q, const Rep& a, const Type_t& b ) const;
-            // generic mul with dynamic recursive choices between stdmul and karamul
-        Rep& mul   ( Rep& q, const Rep& a, const Rep& b ) const;
-            // Forces standard multiplication algorithm
-        Rep& stdmul( Rep& R, const Rep& P, const Rep& Q) const;
-            // Forces first level of Karatsuba multiplication algorithm
-        Rep& karamul( Rep& R, const Rep& P, const Rep& Q) const;
-        
+
 		// Compute truncated mul: only the coefficients inside
 		// the degree interval, included
 		Rep& mul( Rep&, const Rep&, const Rep&, const Degree&, const Degree&) const;
-        
-        
-		Rep& sqr   ( Rep& q, const Rep& a ) const;
 
 
 		Rep& shiftin ( Rep&, int ) const;
@@ -423,56 +390,8 @@ namespace Givaro {
 		template< class RandIter > Rep& nonzerorandom(RandIter& g, Rep& r, const Rep& b) const;
 
 		// -- Square free decomposition
-		/** Sqrfree decomposition.
-		 * Decompose P such that:
-		 * P = Fact[0]^0 * Fact[1]^1 * ... * Fact[P.degree()]^(P.degree()),
-		 * with Fact[0] the leading coefficient.
-		 * The array Fact must be allocated before calling the function.
-		 * The size of Fact must be degP+1 is all factors should be computed.
-		 * For more readeable version of the algorithm, see Geddes, p342.
-		 * @param Nfact [in] the size of Fact
-		 * @param Fact  [in] an array of dimension Nfact
-		 @param Nfact [out] is the number of factor in the sqrfree decomposition
-		 @param Fact  [out] contains at most Nfact factors of the decomposition.
-		 @param P rep.
-		  */
-
 		size_t& sqrfree(size_t& Nfact, Rep* Fact, const Rep& P) const;
 
-
-        protected:
-            typedef typename Rep::iterator RepIterator;
-            typedef typename Rep::const_iterator RepConstIterator;
-
-                // Mul only between iterator intervals
-            Rep& mul( Rep& R, const RepIterator Rbeg, const RepIterator Rend,
-                      const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend,
-                      const Rep& Q, const RepConstIterator Qbeg, const RepConstIterator Qend ) const;
-
-            Rep& stdmul( Rep& R, const RepIterator Rbeg, const RepIterator Rend,
-                      const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend,
-                      const Rep& Q, const RepConstIterator Qbeg, const RepConstIterator Qend ) const;
-            Rep& karamul( Rep& R, const RepIterator Rbeg, const RepIterator Rend,
-                      const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend,
-                      const Rep& Q, const RepConstIterator Qbeg, const RepConstIterator Qend ) const;
-
-            Rep& sqr( Rep& R, const RepIterator Rbeg, const RepIterator Rend,
-                      const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend) const;
-            Rep& stdsqr( Rep& R, const RepIterator Rbeg, const RepIterator Rend,
-                         const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend,
-                         const Type_t& two) const;
-            Rep& sqrrec( Rep& R, const RepIterator Rbeg, const RepIterator Rend,
-                         const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend,
-                         const Type_t& two) const;
-
-                // Sub only between iterator intervals
-            Rep& subin (Rep& R,
-                        const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend) const;
-
-            Rep& subin (Rep& R, const RepIterator Rbeg,
-                        const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend) const;
-            Rep& subin (Rep& R, const RepIterator Rbeg, const RepIterator Rend,
-                        const Rep& P, const RepConstIterator Pbeg, const RepConstIterator Pend) const;
 
 	}; //  ------------------------------- End Of The Class Poly1Dom<Type_t>
 

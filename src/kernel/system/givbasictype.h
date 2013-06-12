@@ -8,12 +8,6 @@
 // Authors: T. Gautier
 // $Id: givbasictype.h,v 1.4 2011-02-02 16:23:56 bboyer Exp $
 // ==========================================================================
-
-/** @file givbasictype.h
- * @ingroup system
- * @brief NO DOC
- */
-
 #ifndef __GIVARO_basictype_H
 #define __GIVARO_basictype_H
 #include "givaro/givconfig.h"
@@ -24,9 +18,7 @@
 
 namespace Givaro {
 
-	/** Neutral type.
-	 * definition of zero and one
-	 */
+	// -- Neutral type: definition of zero and one
 	class Neutral {
 		public:
 			static Neutral zero;
@@ -39,14 +31,13 @@ namespace Givaro {
 			int _val;
 	};
 
-	//! Used to build no initialized object as static object
+	// -- Used to build no initialized object as static object
 	class givNoInit {};
-	//! Used to call cstor without copy
+	// -- Used to call cstor without copy
 	class givNoCopy {};
-	//! Used to call cstor with copy
+	// -- Used to call cstor with copy
 	class givWithCopy {};
 
 } // namespace Givaro
 
 #endif // __GIVARO_basictype_H
-// vim:sts=8:sw=8:ts=8:noet:sr:cino=>s,f0,{0,g0,(0,\:0,t0,+0,=s

@@ -5,14 +5,10 @@
 // and abiding by the rules of distribution of free software.
 // see the COPYRIGHT file for more details.
 // Time-stamp: <19 Jan 11 15:53:22 Jean-Guillaume.Dumas@imag.fr>
+// Givaro : Modular square roots
 // Author : Yanis Linge
 // ============================================================= //
 
-
-/** @file givintsqrootmod.h
- * @ingroup integers
- * @brief Modular square roots
- */
 
 #ifndef __GIVARO_sqrtmod_H
 #define __GIVARO_sqrtmod_H
@@ -28,7 +24,6 @@
 
 namespace Givaro {
 
-	//!  Modular square roots.
 template < class RandIter = GivRandom >
 class IntSqrtModDom:public IntFactorDom < RandIter > {
 public:
@@ -55,7 +50,7 @@ public:
         std::vector < Rep > Pe (Lf.size ());
         typename std::vector < Rep >::iterator Pe_iter = Pe.begin ();
         for (; Pe_iter != Pe.end (); ++Pe_iter, ++Lf_iter, ++Le_iter)
-			dom_power (*Pe_iter, *Lf_iter, (long)*Le_iter, *this);
+            dom_power (*Pe_iter, *Lf_iter, *Le_iter, *this);
 
         Lf_iter = Lf.begin ();
         Le_iter = Le.begin ();

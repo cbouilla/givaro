@@ -5,7 +5,6 @@
 // see the COPYRIGHT file for more details.
 
 /*! @file givextension.h
- * @ingroup zpz
  * @brief NO DOX
  */
 
@@ -21,55 +20,37 @@
 
 namespace Givaro {
 
-	//! XXX
-    template<class Rt>
-	Rt FF_EXPONENT_MAX(const Rt p, const Rt maxe = _GIVARO_FF_MAXEXPONENT_)
-	{
+    template<class Rt> Rt FF_EXPONENT_MAX(const Rt p, const Rt e = 1) {
 	Rt f = 0;
-	for(Rt i = p; (i < (Rt)_GIVARO_FF_TABLE_MAX) && (f < maxe); ++f, i*=p) ;
-	return f;
-    }
-
-	//! XXX
-    template<class Rt>
-	Rt FF_SUBEXPONENT_MAX(const Rt p, const Rt e)
-	{
-	Rt f = FF_EXPONENT_MAX(p,e);
+	for(Rt i = p; (i < (Rt)FF_TABLE_MAX) && (f < e); ++f, i*=p)
+            ;
 	for( ; f > 1; --f)
             if ((e % f) == 0) break;
 	return f;
     }
 
-#define NEED_POLYNOMIAL_REPRESENTATION(p,e) ((e) > FF_SUBEXPONENT_MAX((p),(e)))
+#define NEED_POLYNOMIAL_REPRESENTATION(p,e) ((e) > FF_EXPONENT_MAX((p),(e)))
 
 #define EXTENSION(q,expo) ( NEED_POLYNOMIAL_REPRESENTATION((q),(expo)) ? Extension<>((q), (expo)) : GFqDom<long>((q), (expo)) )
 
 
-	//! XXX
-    template<typename Field>
-	unsigned long Exponent_Trait(const Field& F)
-	{
+    template<typename Field> unsigned long Exponent_Trait(const Field& F) {
         return 1;
     }
 
 
-	//! XXX
-    template<>
-	inline unsigned long Exponent_Trait(const GFqDom<long>& F)
-	{
+    template<> unsigned long Exponent_Trait(const GFqDom<long>& F) {
         return F.exponent();
     }
 
     template<typename BaseField> class Extension;
 
-	//! XXX
     template<typename BaseField>
-    unsigned long Exponent_Trait(const Extension<BaseField>& F)
-	{
+    unsigned long Exponent_Trait(const Extension<BaseField>& F) {
         return F.exponent();
     }
 
-//! Extension
+
     template<class BFT = GFqDom<long>  >
     class Extension {
     public:
@@ -102,26 +83,26 @@ namespace Givaro {
 
 	Element zero;
 	Element one;
-	Element mOne;
+	Element mone;
 
 	Extension() {}
 
 
 	Extension ( const Residu_t p, const Residu_t e = 1, const Indeter Y="Y") :
-		_bF(p, FF_SUBEXPONENT_MAX(p,e) ), _pD( _bF, Y  ), _characteristic( p )
-            , _extension_order( e/FF_SUBEXPONENT_MAX(p,e) ), _exponent ( e )
+		_bF(p, FF_EXPONENT_MAX(p,e) ), _pD( _bF, Y  ), _characteristic( p )
+            , _extension_order( e/FF_EXPONENT_MAX(p,e) ), _exponent ( e )
             , _cardinality( pow(Integer(p),(unsigned long)(e)) ), zero (_pD.zero)
-            , one (_pD.one), mOne(_pD.mOne)
+            , one (_pD.one), mone(_pD.mone)
             {
                     /*     cerr << "Pol Cstor" << endl; */
-		unsigned long basedegree = FF_SUBEXPONENT_MAX(p,e) ;
+		unsigned long basedegree = FF_EXPONENT_MAX(p,e) ;
 		if (basedegree >= e) {
                     std::cerr << "WARNING : Try a direct extension field GFDom instead of a polynomial extension" << std::endl;
                     _bF = BaseField_t(p, 1);
                     _pD = Pol_t(_bF, Y);
                     _extension_order = _exponent;
 		}
-		_pD.creux_random_irreducible( _irred, (long)_extension_order );
+		_pD.creux_random_irreducible( _irred, _extension_order );
             }
 
 
@@ -135,7 +116,7 @@ namespace Givaro {
             , _cardinality(     (Integer) pow( Integer(bF.cardinality()) , (unsigned long)(ex) ) )
             , zero(             (Element)(_pD.zero))
             , one (             (Element)(_pD.one))
-            , mOne (             (Element)(_pD.mOne))
+            , mone (             (Element)(_pD.mone))
             {
 				Degree eo ((long int)_extension_order);
 		if (_cardinality < (1<<20) )
@@ -155,13 +136,13 @@ namespace Givaro {
             , _cardinality(     (Integer) pow( Integer(_bF.cardinality()) , (unsigned long)_extension_order ) )
             , zero(             (Element)(_pD.zero))
             , one (             (Element)(_pD.one))
-            , mOne (             (Element)(_pD.mOne))
+            , mone (             (Element)(_pD.mone))
             {
                 if (polydomain.isOne(_irred)) {
                     if (_cardinality < (1<<20) )
-                        _pD.creux_random_irreducible( _irred,  (long) _extension_order);
+                        _pD.creux_random_irreducible( _irred,  (Degree) _extension_order);
                     else
-                        _pD.random_irreducible( _irred,  (long) _extension_order);
+                        _pD.random_irreducible( _irred,  (Degree) _extension_order);
                 }
             }
 
@@ -170,7 +151,7 @@ namespace Givaro {
             , _characteristic( eF._characteristic )
             , _extension_order( eF._extension_order )
             , _exponent( eF._exponent ), _cardinality( eF._cardinality )
-            , zero (_pD.zero), one (_pD.one), mOne (_pD.mOne)
+            , zero (_pD.zero), one (_pD.one), mone (_pD.mone)
             { }
 
 	Self_t & operator=(const Self_t& eF)
@@ -185,7 +166,7 @@ namespace Givaro {
 			_cardinality = eF._cardinality;
 			zero = eF.zero;
 			one = eF.one;
-			mOne = eF.mOne;
+			mone = eF.mone;
 		}
 		return *this;
 	}
@@ -202,9 +183,9 @@ namespace Givaro {
             }
 
 	PolElement& assign( PolElement& e, const BFElement& a) const
-	{
+            {
 		return _pD.assign(e, a) ;
-	}
+            }
 
 	PolElement& assign( PolElement& e, const PolElement& a) const
             {
@@ -337,7 +318,7 @@ namespace Givaro {
 
 	template<class RandIter> Element& random(RandIter& g, Element& r) const
             {
-	       	return _pD.random(g,r,Degree((long)_exponent-1));
+	       	return _pD.random(g,r,Degree(_exponent-1));
             }
 	template<class RandIter> Element& random(RandIter& g, Element& r, long s) const
             {
@@ -349,7 +330,7 @@ namespace Givaro {
             }
 	template<class RandIter> Element& nonzerorandom(RandIter& g, Element& r) const
             {
-	       	return _pD.nonzerorandom(g,r,Degree((long)_exponent-1));
+	       	return _pD.nonzerorandom(g,r,Degree(_exponent-1));
             }
 	template<class RandIter> Element& nonzerorandom(RandIter& g, Element& r, long s) const
             {
@@ -447,7 +428,7 @@ namespace Givaro {
 
     };
 
-//! Extension rand iters
+
     template <class ExtensionField, class Type>
     class GIV_ExtensionrandIter {
 
@@ -570,6 +551,9 @@ namespace Givaro {
             //@} Common Object Iterface
 
             /** @name Implementation-Specific Methods.
+             * These methods are not required of all
+             * \Ref{LinBox Random field Element generators}
+             * and are included only for this implementation of the archetype.
              */
             //@{
 

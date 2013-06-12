@@ -7,11 +7,6 @@
 // Time-stamp: <11 Jun 10 14:43:52 Jean-Guillaume.Dumas@imag.fr>
 // ================================================================= //
 
-/** @file givpoly1padic.h
- * @ingroup poly1
- * @brief NO DOC.
- */
-
 #ifndef __GIVARO_poly1_p_adic_H
 #define __GIVARO_poly1_p_adic_H
 #include <givaro/givinteger.h>
@@ -23,7 +18,6 @@ namespace Givaro {
 
 template<class Domain, class Tag=Dense> class Poly1PadicDom;
 
-//! Poly1 p-adic.
 template<class Domain>
 class Poly1PadicDom<Domain,Dense> : public Poly1Dom<Domain,Dense>, public IntegerDom {
     using Poly1Dom<Domain,Dense>::_domain;
@@ -67,7 +61,7 @@ public:
         _domain.convert(E,*pi);
         for (++pi;pi != P.rend();++pi) {
             E *= _domain.size();
-            E += (unsigned long)_domain.convert(*pi);
+            E += _domain.convert(*pi);
         }
         return E;
     }
@@ -78,7 +72,7 @@ public:
         _domain.convert(E,*pi);
         for (++pi;pi != P.rend();++pi) {
             E *= _domain.size();
-            E += (unsignedinttype)_domain.convert(*pi);
+            E += _domain.convert(*pi);
         }
         return E;
     }
@@ -117,11 +111,11 @@ public:
             IntegerDom::divmod(iq, ir, E, q);
             radix(Q, iq, n-t);
             radix(P, ir, t);
-            Degree dp; this->degree(dp,P); ++dp;
+            Degree dp; degree(dp,P); ++dp;
             for(long i=t; dp<i; --i)
                 P.push_back(_domain.zero);
         P.insert(P.end(),Q.begin(),Q.end());
-        return this->setdegree(P);
+        return setdegree(P);
     }
 
 
@@ -137,7 +131,7 @@ public:
         }
         double iq, ir;
         vect Q;
-            long t = (long)(n+1)/2;
+            long t = (n+1)/2;
             double q = std::pow(double(_domain.size()), double(t));
             iq = floor( E / q );
             ir = E - iq*q;

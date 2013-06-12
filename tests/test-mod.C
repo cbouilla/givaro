@@ -11,9 +11,9 @@
 
 using namespace Givaro;
 
-#define AREEQUALVALUES(a,b)\
+#define SONT_EQ(a,b)\
 	if ( (a) != (b) ) { \
-		std::cout << "*** ERROR line " << __LINE__ << std::endl; \
+		std::cout << "erreur à la ligne " << __LINE__ << std::endl; \
 		std::cout << a << "!=" << b << std::endl; \
 		return -1 ; \
 	}
@@ -80,19 +80,19 @@ int test1( const T m, const U p)
 	Integer R ;
 
 	Integer::mod(R,M,P);
-	AREEQUALVALUES(r,R);
+	SONT_EQ(r,R);
 
 	Integer::mod(R,M,p);
-	AREEQUALVALUES(r,R);
+	SONT_EQ(r,R);
 
 
 	Integer R1 = M ;
 	Integer::modin(R1,P);
-	AREEQUALVALUES(R,R1);
+	SONT_EQ(R,R1);
 
 	R1 = M ;
 	Integer::modin(R1,p);
-	AREEQUALVALUES(R,R1);
+	SONT_EQ(R,R1);
 
 
 	return 0;
@@ -110,18 +110,18 @@ int test1bis( const T m, const U p)
 	Integer R =r ;
 
 	Integer R1 = M%p ;
-	AREEQUALVALUES(R,R1);
+	SONT_EQ(R,R1);
 
 	Integer R2 = M%P ;
-	AREEQUALVALUES(R,R2);
+	SONT_EQ(R,R2);
 
 	Integer R3 = M%pi ;
-	AREEQUALVALUES(R,R3);
+	SONT_EQ(R,R3);
 
 
 	R2 = M ;
 	R2 %= P ;
-	AREEQUALVALUES(R,R2);
+	SONT_EQ(R,R2);
 
 	return 0;
 }/*}}}*/
@@ -139,11 +139,11 @@ int test2(Integer & M, Integer & P)
 	//!@todo existe pas !
 	//R = Integer:: imod(M,P) ;
 	Integer:: mod(R,M,P) ;
-	AREEQUALVALUES(RR,R);
+	SONT_EQ(RR,R);
 
 	R = M ;
 	Integer::modin(R,P);
-	AREEQUALVALUES(RR,R);
+	SONT_EQ(RR,R);
 
 	return 0;
 }/*}}}*/
@@ -160,11 +160,11 @@ int test2bis(Integer & M, Integer & P)
 
 	R = M ;
 	R %= P;
-	AREEQUALVALUES(RR,R);
+	SONT_EQ(RR,R);
 
 	R = M ;
 	R = M%P;
-	AREEQUALVALUES(RR,R);
+	SONT_EQ(RR,R);
 
 	return 0;
 }/*}}}*/
@@ -173,31 +173,31 @@ template< class T, class U>
 int test3( const T m, const U p)
 {/*{{{*/
 	int pi = int(p);
-	long int q = (long int)(m / (T)p);
+	long int q = m / p;
 	const Integer M(m);
 	const Integer P(p);
 	Integer Q ;
 
 	Integer::div(Q,M,P);
-	AREEQUALVALUES(q,Q);
+	SONT_EQ(q,Q);
 
 	Integer Q1 = M/p ;
-	AREEQUALVALUES(Q,Q1);
+	SONT_EQ(Q,Q1);
 
 	Integer Q2 = M/P ;
-	AREEQUALVALUES(Q,Q2);
+	SONT_EQ(Q,Q2);
 
 	Integer Q3 = M/pi ;
-	AREEQUALVALUES(Q,Q3);
+	SONT_EQ(Q,Q3);
 
 	Q1 = M ;
 	Integer::divin(Q1,P);
-	AREEQUALVALUES(Q,Q1);
+	SONT_EQ(Q,Q1);
 
 
 	Q2 = M ;
 	Q2 /= P ;
-	AREEQUALVALUES(Q,Q2);
+	SONT_EQ(Q,Q2);
 
 	return 0;
 }/*}}}*/
@@ -213,12 +213,12 @@ int main()
 #endif
 
 	long int p = 78678675;
-	unsigned long int M((unsigned long)m);
-	unsigned long int P((unsigned long)p);
+	unsigned long int M(m);
+	unsigned long int P(p);
 
-        Integer mOne(-1);
+        Integer mone(-1);
             // CONDITION: mpz_tdiv_ui does NOT consider the sign of gmp_rep
-        assert(mpz_tdiv_ui( (mpz_ptr)&mOne, 3) == 1);
+        assert(mpz_tdiv_ui( (mpz_ptr)&mone, 3) == 1);
 
 	// Integer r ;
 	// Integer a = -6 ;

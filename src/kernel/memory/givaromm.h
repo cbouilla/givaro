@@ -8,16 +8,10 @@
 // Author: T. Gautier
 // $Id: givaromm.h,v 1.7 2011-02-02 16:23:56 bboyer Exp $
 // ==========================================================================
-
-/** @file givaromm.h
- * @ingroup memory
- * @brief Memory management in Givaro
- * two memory managers:
- * - the first one handle a set on free-list of blocs ;
- * - the second one implement a reference mecanism on the bloc.
- * .
- * The latter used method of the former.
- */
+// Description:
+// - two memory managers: the first one handle a set on free-list
+//   of blocs, the second one implement a reference mecanism on
+//   the bloc. The latter used method of the former.
 #ifndef __GIVARO_mm_H
 #define __GIVARO_mm_H
 
@@ -31,39 +25,36 @@
 #include "givaro/giverror.h"
 #endif
 
-#include <givaro/givconfig.h>
 namespace Givaro {
 
 // ==================================================================== //
 
-//!  Static informations of memory allocation
+// -------- Static informations of memory allocation
 class GivMMInfo {
 public:
 	GivMMInfo();
 	~GivMMInfo();
 	size_t physalloc; // size in bytes of physical allocated bloc
 	size_t logalloc;  // size in bytes of "logical" allocated bloc
-	size_t  sizetab;    // length of next arrays
+	long  sizetab;    // length of next arrays
 	size_t* tabbloc;  // size of all the blocs
-	size_t* tablog;     // number of each logical allocated bloc
-	size_t* tabphy;     // number of each physical allocated bloc
+	long* tablog;     // number of each logical allocated bloc
+	long* tabphy;     // number of each physical allocated bloc
 	std::ostream& print( std::ostream& so ) const;
 };
 
-//! IO
 inline std::ostream& operator<<( std::ostream& o, const GivMMInfo& T)
 { return T.print(o); }
 
 // --------------------------------------------------------
-//! Data structure of a bloc.
-//! Each bloc in TabFree[id] has a data field of size TabSize[id]
+// -- Data structure of a bloc.
+// Each bloc in TabFree[id] has a data field of size TabSize[id]
 class BlocFreeList {
 	union header {
 		int index ;             // - index in free list
 		BlocFreeList* nextfree; // - pointer to the next free bloc (of the same size)
-        double dummy; 			// - here to force alignment on data on 8bytes boundary
 	} u;
-	int64_t data[1];     
+	long data[1];     // - alignement on long, may be no enough one some processor ?
 
 	// -- Array of list of free bloc
 	static BlocFreeList* TabFree[];
@@ -78,8 +69,8 @@ class BlocFreeList {
 
 
 // --------------------------------------------------------
-//! Implementation of a memory manager with free-lists.
-//! All members are static methods.
+// Implementation of a memory manager with free-lists.
+// All members are static methods.
 class GivMMFreeList {
 public:
 
@@ -120,8 +111,8 @@ public:
 	inline static void desallocate(void* p, const size_t = 0)
 	{
 		if (p==0) return ;
-		BlocFreeList* tmp = reinterpret_cast<BlocFreeList*>(((char*)p) -
-						    (sizeof(BlocFreeList)-sizeof(int64_t)));
+		BlocFreeList* tmp = (BlocFreeList*)(((char*)p) -
+						    (sizeof(BlocFreeList)-sizeof(long)));
 		int index = tmp->u.index;
 #ifdef GIVARO_DEBUG
 		if ((index <0) || (index >= BlocFreeList::lenTables))
@@ -146,8 +137,8 @@ public:
 	friend class GivMMRefCount;
 	static size_t& physalloc;  // total amount of physical allocated bloc
 	static size_t& logalloc;   // total amoun of "logical" allocated bloc
-	static size_t*& tablog;      // number of each logical allocated bloc
-	static size_t*& tabphy;      // number of each physical allocated bloc
+	static long*& tablog;      // number of each logical allocated bloc
+	static long*& tabphy;      // number of each physical allocated bloc
 #endif
 
 	// -- Initialization module
@@ -160,9 +151,9 @@ private:
 };
 
 
-//! Memory management with reference counter on allocated data.
-//! The memory manager uses the BlocFreeList data structure
-//! and stores the refcounter in the field data[0]
+// -- Memory management with reference counter on allocated data.
+// The memory manager uses the BlocFreeList data structure
+// and stores the refcounter in the field data[0]
 class GivMMRefCount {
 public:
 	// -- Allocation of a new bloc of size at least s
@@ -174,7 +165,7 @@ public:
 #endif
 		int index;
 		BlocFreeList* tmp;
-		size_t sz = s + sizeof(int64_t);
+		size_t sz = s + sizeof(long);
 		if ((sz <= 32) && ((tmp=BlocFreeList::TabFree[index =int(sz-1)]) !=0)) {
 			BlocFreeList::TabFree[index] = tmp->u.nextfree;
 			tmp->u.index = index;
@@ -199,7 +190,7 @@ public:
 	inline static void desallocate(void* p, const size_t = 0)
 	{
 		if (p==0) return ;
-		BlocFreeList* tmp = reinterpret_cast<BlocFreeList*>((char *) p - sizeof(BlocFreeList) ) ;
+		BlocFreeList* tmp = (BlocFreeList*)(((char*)p) - sizeof(BlocFreeList));
 		if ( --(tmp->data[0]) ==0) {
 			int index = tmp->u.index;
 #ifdef GIVARO_DEBUG
@@ -225,7 +216,7 @@ public:
 		if (src == *dest) return *dest ;
 		if (*dest !=0) GivMMRefCount::desallocate( *dest );
 		if (src ==0) return *dest=src;
-		BlocFreeList* s = reinterpret_cast<BlocFreeList*>(((char*)src) - sizeof(BlocFreeList));
+		BlocFreeList* s = (BlocFreeList*)(((char*)src) - sizeof(BlocFreeList));
 #ifdef GIVARO_DEBUG
 		if ((s->u.index <0) || (s->u.index >= BlocFreeList::lenTables))
 			GivError::throw_error(GivError("[GivMMRefCount::assign]: bad pointer 'src'."));
@@ -239,7 +230,7 @@ public:
 	inline static int incrc(void* p)
 	{
 		if (p ==0) return 0;
-		BlocFreeList* bp = reinterpret_cast<BlocFreeList*>(((char*)p) - sizeof(BlocFreeList));
+		BlocFreeList* bp = (BlocFreeList*)(((char*)p) - sizeof(BlocFreeList));
 #ifdef GIVARO_DEBUG
 		if ((bp->u.index <0) || (bp->u.index >= BlocFreeList::lenTables))
 			throw GivError("[GivMMRefCount::incrc]: bad pointer.");
@@ -249,7 +240,7 @@ public:
 	inline static int decrc(void* p)
 	{
 		if (p ==0) return 0;
-		BlocFreeList* bp = reinterpret_cast<BlocFreeList*>(((char*)p) - sizeof(BlocFreeList));
+		BlocFreeList* bp = (BlocFreeList*)(((char*)p) - sizeof(BlocFreeList));
 #ifdef GIVARO_DEBUG
 		if ((bp->u.index <0) || (bp->u.index >= BlocFreeList::lenTables))
 			throw GivError("[GivMMRefCount::incrc]: bad pointer.");
@@ -259,7 +250,7 @@ public:
 	inline static int getrc(void* p)
 	{
 		if (p ==0) return 0;
-		BlocFreeList* bp = reinterpret_cast<BlocFreeList*>(((char*)p) - sizeof(BlocFreeList));
+		BlocFreeList* bp = (BlocFreeList*)(((char*)p) - sizeof(BlocFreeList));
 #ifdef GIVARO_DEBUG
 		if ((bp->u.index <0) || (bp->u.index >= BlocFreeList::lenTables))
 			throw GivError("[GivMMRefCount::incrc]: bad pointer.");
@@ -269,7 +260,7 @@ public:
 };
 
 
-//! Memory manager that allocates array of object of type T for
+// -- Memory manager that allocates array of object of type T for
 template<class T>
 class GivaroMM {
 public:
@@ -284,10 +275,6 @@ public:
 	// -- Call destructor on each elements pointed by bloc
 	static void destroy(T* bloc, const size_t s);
 };
-
-
-//! @bug implem does not belong here
-//@{
 template<class T>
 inline T* GivaroMM<T>::allocate (const size_t s)
 { return (T*)GivMMFreeList::allocate(s*sizeof(T)); }
@@ -303,7 +290,6 @@ inline void GivaroMM<T>::initialize(T* bloc, const size_t s, const T& V)
 template<class T>
 inline void GivaroMM<T>::destroy(T* bloc, const size_t s)
 { for (size_t i=0; i<s; i++) bloc[i].~T(); }
-//@}
 
 // -- specialized version: for basic C++ type and pointer on this type
 #define GIVARO_MM_SPECIALIZED(TYPE) \

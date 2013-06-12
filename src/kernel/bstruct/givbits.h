@@ -8,10 +8,8 @@
 // Author: T. Gautier
 // $Id: givbits.h,v 1.3 2011-02-02 16:23:55 bboyer Exp $
 // ==========================================================================
-/** @file givbits.h
- * @ingroup bstruct
- * @brief field of n bits, for any n
- */
+// Description:
+// - field of n bits, for any n
 #ifndef __GIVARO_bits_H
 #define __GIVARO_bits_H
 
@@ -21,7 +19,6 @@
 
 namespace Givaro {
 
-	//! Bits.
 class Bits {
 public:
   typedef size_t base ;

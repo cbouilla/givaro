@@ -28,47 +28,47 @@
 
 #define _GIVARO_GFQ_ADD(c, a, b, mun, plun) { if ((b)==0) (c)=(a); else if ((a)==0) (c)=(b); else { \
 	(c) = (a)-(b); \
-	(c) = ((c)>0)?(c):(c)+ (TT)(mun); \
+	(c) = ((c)>0)?(c):(c)+ (mun); \
 	(c) = (plun)[(UT)(c)]; \
 	if (c) { \
 		(c) = (c)+(b); \
-		(c) = ((c)>0)?(c):(c)+(TT)(mun); \
+		(c) = ((c)>0)?(c):(c)+(mun); \
 	} } }
 
 #define _GIVARO_GFQ_NEG(res, a, mo, mun) { if ( (a)==0 ) (res)=0; else\
-	{ (res) = (Rep) ( (a) - (Rep) (mo) ) ; (res) = (Rep) ( ((res)>0)?(res):(res)+(Rep)(mun) ) ; } }
+	{ (res) = (a) - (mo) ; (res) = ((res)>0)?(res):(res)+(mun); } }
 
 // Warning : valid iff a != c
 // if not use AUTOSUB ...
 #define _GIVARO_GFQ_SUB(c, a, b, mo, mun, plun) { if ((a)==0) {_GIVARO_GFQ_NEG(c,b,mo,mun);} else if ((b)==0) (c)=(a); else { \
-	(c) = (b)-(a)-(TT)(mo); \
-	(c) = ((c)>0)?(c):(c)+(TT)(mun); \
-	(c) = ((c)>0)?(c):(c)+ (TT)(mun); \
+	(c) = (b)-(a)-(mo); \
+	(c) = ((c)>0)?(c):(c)+(mun); \
+	(c) = ((c)>0)?(c):(c)+ (mun); \
 	(c) = (plun)[(UT)(c)]; \
 	if (c) { \
 		(c) = (c)+(a); \
-		(c) = ((c)>0)?(c):(c)+(TT)(mun); \
+		(c) = ((c)>0)?(c):(c)+(mun); \
 	} } }
 #define _GIVARO_GFQ_AUTOSUB(c, b, mo, mun, plun) { if ((c)==0) {_GIVARO_GFQ_NEG(c,b,mo,mun);} else if ((b)!=0) { \
-	(c) = (c)-(b)-(TT)(mo); \
-	(c) = ((c)>0)?(c):(c)+(TT)(mun); \
-	(c) = ((c)>0)?(c):(c)+ (TT)(mun); \
+	(c) = (c)-(b)-(mo); \
+	(c) = ((c)>0)?(c):(c)+(mun); \
+	(c) = ((c)>0)?(c):(c)+ (mun); \
 	(c) = (plun)[(UT)(c)]; \
 	if (c) { \
 		(c) = (c)+(b); \
-		(c) = ((c)>0)?(c)-(TT)(mo):(c)+(TT)(mo); \
-		(c) = ((c)>0)?(c):(c)+(TT)(mun); \
+		(c) = ((c)>0)?(c)-(mo):(c)+(mo); \
+		(c) = ((c)>0)?(c):(c)+(mun); \
 	} } }
 
 
 
-#define _GIVARO_GFQ_MUL(res, a, b, mun) { if ( ((a)==0) || ((b)==0) ) { (res) =0; } else { (res) = (((res) = (a)+(b) )>(TT)(mun))?(res)-(TT)(mun):(res); } }
+#define _GIVARO_GFQ_MUL(res, a, b, mun) { if ( ((a)==0) || ((b)==0) ) { (res) =0; } else { (res) = (((res) = (a)+(b) )>(TT)(mun))?(res)-(mun):(res); } }
 
 // JGD 02.04.1998 :  if a==1, a /= a used to be --> 0 !!!
-#define _GIVARO_GFQ_INV(res, a, mun)    { (res) = (Rep)( (Rep)(mun)-(a) ); (res)= (Rep) ( (res)?(res):(Rep)(mun) ); }
+#define _GIVARO_GFQ_INV(res, a, mun)    { (res) = (mun)-(a); (res)=(res)?(res):(mun); }
 
 #define _GIVARO_GFQ_DIV(res, a, b, mun) {  \
-	if ( (a)==0 ) { (res)=0; } else { (res) = (((res)=(a)-(b))>0)?(res):(res)+(TT)(mun); } }
+	if ( (a)==0 ) { (res)=0; } else { (res) = (((res)=(a)-(b))>0)?(res):(res)+(mun); } }
 
 
 
@@ -93,11 +93,11 @@
 #define _GIVARO_GFQ_MULADD(c,a1,a2,b,mun,plun) { \
 	if (((a1)==0) || ((a2)==0)) { (c)=(b); \
 	} else if ((b)==0) { \
-		(c) = ((    (c)=(a1)+(a2) - (TT)(mun)       )>0)?(c):(c) + (TT)(mun); \
+		(c) = ((    (c)=(a1)+(a2) - (mun)       )>0)?(c):(c) + (mun); \
 	} else { \
-		(c) = ((    (c) = (a1)+(a2)-(b)-(TT)(mun)        )<0)?(c)+(TT)(mun):(c); \
-		if (( (c) = (plun)[(UT)( ((c)>0)?(c):(c)+(TT)(mun)   )])  ) { \
-			(c) = ((    (c) = (c)+(b)        )>0)?(c):(c)+(TT)(mun); }\
+		(c) = ((    (c) = (a1)+(a2)-(b)-(mun)        )<0)?(c)+(mun):(c); \
+		if (( (c) = (plun)[(UT)( ((c)>0)?(c):(c)+(mun)   )])  ) { \
+			(c) = ((    (c) = (c)+(b)        )>0)?(c):(c)+(mun); }\
 	}\
 }
 
@@ -132,7 +132,7 @@
 	} ++_add_count; } }
 
 #define _GIVARO_GFQ_NEG(res, a, mo, mun) { ++_neg_call; if ( (a)==0 ) (res)=0; else\
-	{ (res) = (Rep) ((a) - (mo)) ; (res) = (Rep) ( ((res)>0)?(res):(res)+(mun) ); ++_neg_count; } }
+	{ (res) = (a) - (mo) ; (res) = ((res)>0)?(res):(res)+(mun); ++_neg_count; } }
 
 // Warning : valid iff a != c
 // if not use AUTOSUB ...
@@ -236,7 +236,7 @@ namespace Givaro {
     inline typename GFqDom<TT>::Rep& GFqDom<TT>::indeterminate(Rep& X) const
     {
         if (exponent()>1) {
-            return X=(Rep)_pol2log[(size_t)_characteristic];
+            return X=_pol2log[_characteristic];
         } else {
             return X=one;
         }
@@ -263,7 +263,6 @@ namespace Givaro {
 
     template<typename TT> inline typename GFqDom<TT>::Residu_t GFqDom<TT>::size() const
     { return _q; }
-
 
 
 	// ------------------------- Miscellaneous functions
@@ -307,71 +306,68 @@ namespace Givaro {
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::mulin
-    (Rep& r, const Rep a) const
+    (GFqDom<TT>::Rep& r, const GFqDom<TT>::Rep a) const
     { _GIVARO_GFQ_MUL(r,r,a, GFqDom<TT>::_qm1) ; return r; }
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::div
-    (Rep& r, const Rep a, const Rep b) const
-    {
-	   	_GIVARO_GFQ_DIV(r, a, b, GFqDom<TT>::_qm1) ;
-		return r;
-	}
+    (GFqDom<TT>::Rep& r, const GFqDom<TT>::Rep a, const GFqDom<TT>::Rep b) const
+    { _GIVARO_GFQ_DIV(r, a, b, GFqDom<TT>::_qm1) ; return r; }
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::divin
-    (Rep& r, const Rep a) const
+    (GFqDom<TT>::Rep& r, const GFqDom<TT>::Rep a) const
     { _GIVARO_GFQ_DIV(r, r, a, GFqDom<TT>::_qm1) ; return r; }
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::add
-    (Rep& r, const Rep a, const Rep b) const
+    (GFqDom<TT>::Rep& r, const GFqDom<TT>::Rep a, const GFqDom<TT>::Rep b) const
     { _GIVARO_GFQ_ADD(r, a, b, GFqDom<TT>::_qm1, GFqDom<TT>::_plus1) ; return r; }
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::addin
-    (Rep& r, const Rep a) const
+    (GFqDom<TT>::Rep& r, const GFqDom<TT>::Rep a) const
     { _GIVARO_GFQ_ADD(r, r, a, GFqDom<TT>::_qm1, GFqDom<TT>::_plus1) ; return r; }
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::sub
-    (Rep& r, const Rep a, const Rep b) const
+    (GFqDom<TT>::Rep& r, const GFqDom<TT>::Rep a, const GFqDom<TT>::Rep b) const
     { _GIVARO_GFQ_SUB(r, a, b, GFqDom<TT>::_qm1o2, GFqDom<TT>::_qm1, GFqDom<TT>::_plus1) ; return r; }
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::subin
-    (Rep& r, const Rep a) const
+    (GFqDom<TT>::Rep& r, const GFqDom<TT>::Rep a) const
     { _GIVARO_GFQ_AUTOSUB(r, a, GFqDom<TT>::_qm1o2, GFqDom<TT>::_qm1, GFqDom<TT>::_plus1) ; return r; }
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::neg
-    (Rep& r, const Rep a) const
+    (GFqDom<TT>::Rep& r, const GFqDom<TT>::Rep a) const
     { _GIVARO_GFQ_NEG(r, a, GFqDom<TT>::_qm1o2, GFqDom<TT>::_qm1) ; return r; }
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::negin
-    (Rep& r) const
+    (GFqDom<TT>::Rep& r) const
     { _GIVARO_GFQ_NEG(r, r, GFqDom<TT>::_qm1o2, GFqDom<TT>::_qm1) ; return r; }
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::inv
-    (Rep& r, const Rep a) const
+    (GFqDom<TT>::Rep& r, const GFqDom<TT>::Rep a) const
     { _GIVARO_GFQ_INV(r, a, GFqDom<TT>::_qm1) ; return r; }
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::invin
-    (Rep& r) const
+    (GFqDom<TT>::Rep& r) const
     { _GIVARO_GFQ_INV(r, r, GFqDom<TT>::_qm1) ; return r; }
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::axpy
-    (Rep& r, const Rep a, const Rep b, const Rep c)
+    (GFqDom<TT>::Rep& r, const GFqDom<TT>::Rep a, const GFqDom<TT>::Rep b, const GFqDom<TT>::Rep c)
 	const
     { _GIVARO_GFQ_MULADD(r,a,b,c, GFqDom<TT>::_qm1, GFqDom<TT>::_plus1) ; return r; }
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::axpyin
-    (Rep& r, const Rep a, const Rep b) const
+    (GFqDom<TT>::Rep& r, const GFqDom<TT>::Rep a, const GFqDom<TT>::Rep b) const
     {
         Rep tmp = r;
         _GIVARO_GFQ_MULADD((r),a,b,tmp, (GFqDom<TT>::_qm1), (GFqDom<TT>::_plus1)) ;
@@ -380,9 +376,9 @@ namespace Givaro {
 
         // r <- r-a*b
     template<typename TT>
-    inline typename GFqDom<TT>::Rep&  GFqDom<TT>::maxpyin (Rep& r,
-                                                           const Rep a,
-                                                           const Rep b) const
+    inline typename GFqDom<TT>::Rep&  GFqDom<TT>::maxpyin (GFqDom<TT>::Rep& r,
+                                                           const GFqDom<TT>::Rep a,
+                                                           const GFqDom<TT>::Rep b) const
     {
             //   Rep tmp = r;
             //   _GIVARO_GFQ_MULSUB(r,a,b,tmp, _qm1o2, _qm1, _plus1) ;
@@ -392,9 +388,9 @@ namespace Givaro {
     }
 
     template<typename TT>
-    inline typename GFqDom<TT>::Rep&  GFqDom<TT>::axmyin (Rep& r,
-                                                          const Rep a,
-                                                          const Rep b) const
+    inline typename GFqDom<TT>::Rep&  GFqDom<TT>::axmyin (GFqDom<TT>::Rep& r,
+                                                          const GFqDom<TT>::Rep a,
+                                                          const GFqDom<TT>::Rep b) const
     {
         this->maxpyin(r,a,b);
         return this->negin(r);
@@ -403,7 +399,7 @@ namespace Givaro {
         // r <- a*b-c
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::axmy
-    (Rep& r, const Rep a, const Rep b, const Rep c)
+    (GFqDom<TT>::Rep& r, const GFqDom<TT>::Rep a, const GFqDom<TT>::Rep b, const GFqDom<TT>::Rep c)
         const
     {
         _GIVARO_GFQ_MUL(r,a,b, GFqDom<TT>::_qm1) ;
@@ -412,7 +408,7 @@ namespace Givaro {
 
     template<typename TT>
     inline typename GFqDom<TT>::Rep&  GFqDom<TT>::maxpy
-    (Rep& r, const Rep a, const Rep b, const Rep c)
+    (GFqDom<TT>::Rep& r, const GFqDom<TT>::Rep a, const GFqDom<TT>::Rep b, const GFqDom<TT>::Rep c)
         const
     {
         _GIVARO_GFQ_MUL(r,a,b, GFqDom<TT>::_qm1) ;
@@ -632,8 +628,8 @@ namespace Givaro {
                     tr = double((UTT)tr % _characteristic) ;
             }
 
-            if ((bool)tr)
-                return r = (Rep)_pol2log[ UT(_characteristic - (UTT)tr) ];
+            if (tr)
+                return r = _pol2log[ UT(_characteristic - (UTT)tr) ];
             else
                 return r = zero;
         } else {
@@ -644,7 +640,7 @@ namespace Givaro {
                 if (tr >= (TT)_characteristic )
                     tr = double((UTT)tr % _characteristic) ;
             }
-            return r = (Rep)_pol2log[ (UT)tr ];
+            return r = _pol2log[ (UT)tr ];
         }
     }
 
@@ -667,14 +663,14 @@ namespace Givaro {
             if (tr >= (int)_characteristic )
                 tr =(int)( (UT)tr % _characteristic ) ;
             if (tr)
-                return r = (Rep) _pol2log[(UT) _characteristic - (UT)tr ];
+                return r = _pol2log[(UT) _characteristic - (UT)tr ];
             else
                 return r = zero;
         }
         else {
             if (tr >= (int)_characteristic )
                 tr = int((unsigned int)tr % _characteristic ) ;
-            return r = (Rep)_pol2log[ (UT)tr ];
+            return r = _pol2log[ tr ];
         }
     }
     template<typename TT>
@@ -685,16 +681,14 @@ namespace Givaro {
                 // -a = b [p]
                 // a = p-b [p]
             tr = -tr;
-            if (tr >= (long)_characteristic )
-				tr = tr % (long)_characteristic ;
+            if (tr >= (long)_characteristic ) tr = (unsigned long)tr % _characteristic ;
             if (tr)
-                return r = (typename GFqDom<TT>::Rep) _pol2log[ (size_t)_characteristic - (size_t)tr ];
+                return r = _pol2log[ _characteristic - (unsigned long)tr ];
             else
                 return r = zero;
         } else {
-            if (tr >= (long)_characteristic )
-				tr = tr % (long)_characteristic ;
-            return r = (Rep)_pol2log[ (size_t)tr ];
+            if (tr >= (long)_characteristic ) tr = (unsigned long)tr % _characteristic ;
+            return r = _pol2log[ tr ];
         }
     }
 
@@ -705,21 +699,17 @@ namespace Givaro {
         if (Residu <0) {
                 // -a = b [p]
                 // a = p-b [p]
-            if ( Residu <= (Integer)(-_characteristic) )
-				tr = (UTT) (  (-Residu) % (UTT)_characteristic );
+            if ( Residu <= (Integer)(-_characteristic) ) tr =  (-Residu) % (UTT)_characteristic ;
             else
                 tr = UTT(-Residu);
             if (tr)
-                return r = (Rep)_pol2log[ _characteristic - (UTT)tr ];
+                return r = _pol2log[ _characteristic - (UTT)tr ];
             else
                 return r = zero;
-        }
-		else { /* Residu >=0 */
-            if (Residu >= (Integer)_characteristic )
-				tr =  (UTT)(Residu % (UTT)_characteristic );
-            else
-				tr = UTT(Residu);
-            return r = (Rep)_pol2log[ (size_t)tr ];
+        } else {
+            if (Residu >= (Integer)_characteristic ) tr =  Residu % (UTT)_characteristic ;
+            else tr = UTT(Residu);
+            return r = _pol2log[ tr ];
         }
     }
 
@@ -729,7 +719,7 @@ namespace Givaro {
         unsigned long tr = Residu ;
         if (tr >= _characteristic )
 			tr =tr %  (unsigned long) _characteristic ;
-        return r = (Rep)_pol2log[ (size_t)tr ];
+        return r = _pol2log[ tr ];
     }
 
     template<typename TT>
@@ -737,7 +727,7 @@ namespace Givaro {
     {
         unsigned int tr = Residu ;
         if (tr >= _characteristic ) tr = tr % _characteristic ;
-        return r = (Rep)_pol2log[ (size_t)tr ];
+        return r = _pol2log[ tr ];
     }
 
 #ifndef __GIVARO__DONOTUSE_longlong__
@@ -746,7 +736,7 @@ namespace Givaro {
     {
         unsigned long long tr = Residu ;
         if (tr >= _characteristic ) tr = tr % _characteristic ;
-        return r = (Rep)_pol2log[ (size_t)tr ];
+        return r = _pol2log[ tr ];
     }
 
     template<typename TT>
@@ -857,7 +847,7 @@ namespace Givaro {
         typedef Poly1PadicDom< GFqDom<TT>, Dense > PadicDom;
         static PadicDom PAD(Pdom);
         Degree d;  Pdom.degree(d, P);
-        if (d >= (long)this->_exponent) {
+        if (d >= this->_exponent) {
             static typename PadicDom::Element tmp;
             static typename PadicDom::Element Irreducible = PAD.radix(tmp, this->_irred);
                 // All this was to get the irreducible polynomial
@@ -865,11 +855,11 @@ namespace Givaro {
             typename PolDom::Element modP; Pdom.mod(modP, P, Irreducible);
             TT tr;
             PAD.eval(tr, modP);
-            return r = (Rep) this->_pol2log[(size_t) tr ];
+            return r = this->_pol2log[ tr ];
         } else {
             TT tr;
             PAD.eval(tr, P);
-            return r = (Rep) this->_pol2log[ (size_t)tr ];
+            return r = this->_pol2log[ tr ];
         }
     }
 
@@ -912,7 +902,7 @@ namespace Givaro {
         if (sz) {
             _GIVARO_GFQ_MUL(r,a[0],b[0],_qm1);
             Rep tmp;
-            for(  int i= (int)sz; --i; ) {
+            for(  int i= sz; --i; ) {
                 _GIVARO_GFQ_MUL(tmp,a[i],b[i],_qm1);
                 _GIVARO_GFQ_ADD(r,r,tmp,_qm1,_plus1);
             }
@@ -931,14 +921,14 @@ namespace Givaro {
             //     a = (a<0?a+_q:a);
             //     return a;
         a = Rep( ((UTT)(g()) % (_q-1)) + 1);
-        return a = (a<0?a+(Rep)_q:a);
+        return a = (a<0?a+_q:a);
 
     }
 
     template<typename TT> template<typename RandIter> inline typename GFqDom<TT>::Rep& GFqDom<TT>::random(RandIter& g, Rep& a) const
     {
         a = Rep( (UTT)(g()) % _q);
-        return a = (a<0?a+(Rep)_q:a);
+        return a = (a<0?a+_q:a);
     }
 
     template<typename TT> template<typename RandIter>
@@ -973,13 +963,13 @@ namespace Givaro {
     inline GFqDom<TT>::GFqDom(const UTT P, const UTT e)
             // Precondition P prime
             :  zero(0)
-        , one ( (TT)power(P,e) - 1  )
+        , one (power(P,e) - 1  )
         , _characteristic(P)
         , _exponent(e)
-        , _q( (UTT) one + 1 )
-        , _qm1 ( (UTT) one )
-        , _qm1o2(  (P==2)?  ((UTT)one)  :  (_q >> 1) )   // 1 == -1 in GF(2^k)
-        , mOne((TT)_qm1o2)
+        , _q( one + 1 )
+        , _qm1 ( one )
+        , _qm1o2(  (P==2)?  (one)  :  (_q >> 1) )   // 1 == -1 in GF(2^k)
+        , mone(_qm1o2)
         , _log2pol((UT) _q )
         , _pol2log( (UT)_q )
         , _plus1( (UT)_q )
@@ -987,7 +977,7 @@ namespace Givaro {
     {
 
             // 1 is represented by q-1, zero by 0
-        _log2pol[0] = (UTT) zero;
+        _log2pol[0] = zero;
 
         if (e <= 1) {
             IntNumTheoDom<> NTD;
@@ -1069,7 +1059,7 @@ namespace Givaro {
             else
                 b = a + 1;
                 // WARNING : in the plus1 table we pre-substract (_q - 1)
-            _plus1[(UT)i] = (TT)(_pol2log[(UT)b] - _qm1);
+            _plus1[(UT)i] = _pol2log[(UT)b] - _qm1;
         }
             // -1 + 1 == 0
         _plus1[(UT)_qm1o2] = 0;
@@ -1083,21 +1073,21 @@ namespace Givaro {
     template<typename Vector>
     inline GFqDom<TT>::GFqDom(const UTT P, const UTT e, const Vector& modPoly):
             zero(0)
-        , one ((TT) power(P,e) - 1  )
+        , one (power(P,e) - 1  )
         , _characteristic(P)
         , _exponent(e)
-        , _q( (UTT) one + 1 )
-        , _qm1 ( (UTT)one )
-        , _qm1o2(  (P==2)?  ((UTT)one)  :  (_q >> 1) )   // 1 == -1 in GF(2^k)
-        , mOne((TT)_qm1o2)
-        , _log2pol( (UT)_q )
-        , _pol2log( (UT)_q )
-        , _plus1( (UT)_q )
+        , _q( one + 1 )
+        , _qm1 ( one )
+        , _qm1o2(  (P==2)?  (one)  :  (_q >> 1) )   // 1 == -1 in GF(2^k)
+        , mone(_qm1o2)
+        , _log2pol( _q )
+        , _pol2log( _q )
+        , _plus1( _q )
         , _dcharacteristic( (double)P )
     {
 
             // 1 is represented by q-1, zero by 0
-        _log2pol[0] = (UTT)zero;
+        _log2pol[0] = zero;
 
         GFqDom<TT> Zp(P,1);
         typedef Poly1FactorDom< GFqDom<TT>, Dense > PolDom;
@@ -1138,7 +1128,7 @@ namespace Givaro {
                 b = a - r;
             else
                 b = a + 1;
-            _plus1[i] = (TT)_pol2log[b] - (TT)_qm1;
+            _plus1[i] = _pol2log[b] - _qm1;
         }
 
         _plus1[_qm1o2] = 0;

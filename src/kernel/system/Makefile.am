@@ -15,7 +15,6 @@ pkginclude_HEADERS= \
 	giverror.h	    \
 	givgenarith.h	\
 	givinit.h	    \
-	givcaster.h	    \
 	givmodule.h	    \
 	givperf.h 	    \
 	givpower.h	    \
@@ -30,5 +29,3 @@ libgivsystem_la_SOURCES= \
 	givinit.C	         \
 	givmodule.C	         \
 	givtimer.C
-
-EXTRA_DIST=system.doxy

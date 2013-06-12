@@ -10,7 +10,7 @@
 // ==========================================================================
 //
 //  Modified by Pascal Giorgi on 2002/02/13  (pascal.giorgi@ens-lyon.fr)
-/*! @file givzpz16std.h
+/*! @file zpz/givzpz16std.h
  * @ingroup zpz
  * @brief   Arithmetic on Z/pZ, with p a prime number less than 2^14.
  *   Modulo typedef is a signed long number. In case it was modified
@@ -63,8 +63,6 @@ namespace Givaro {
 
 /*! @brief This class implement the standard arithmetic with Modulo Elements.
  * - The representation of an integer a in Zpz is the value a % p
- * - m max is 32768
- * - p max is 32749
  * .
  */
 template<>
@@ -74,8 +72,8 @@ public:
 	typedef uint16_t Residu_t;                    // - type to store residue
 	enum { size_rep = sizeof(Residu_t) };      // - size of the storage type
 	// ----- Representation of Element of the domain ZpzDom
-	typedef uint16_t Rep;
-	typedef uint16_t Element;
+	typedef int16_t Rep;
+	typedef int16_t Element;
 
 	// ----- Representation of vector of the Element
 	typedef Rep* Array;
@@ -84,12 +82,12 @@ public:
 	// ----- Constantes
 	const Rep zero;
 	const Rep one;
-	const Rep mOne;
+	const Rep mone;
 
 	// ----- Constructor
-	ZpzDom() : zero(0), one(1), mOne((Rep)-1), _p(0) {}
-	ZpzDom( Residu_t p ) : zero(0), one(1), mOne(Rep(p-1)), _p(p) {}
-	ZpzDom( const ZpzDom<Std16>& F) : zero(F.zero), one(F.one), mOne(F.mOne), _p(F._p) {}
+	ZpzDom() : zero(0), one(1), mone(-1), _p(0) {}
+	ZpzDom( Residu_t p ) : zero(0), one(1), mone(Rep(p-1)), _p(p) {}
+	ZpzDom( const ZpzDom<Std16>& F) : zero(F.zero), one(F.one), mone(F.mone), _p(F._p) {}
 
 
 	int operator==( const ZpzDom<Std16>& BC) const { return _p == BC._p;}
@@ -100,7 +98,7 @@ public:
 
 		F.assign(const_cast<Element&>(one),F.one);
 		F.assign(const_cast<Element&>(zero),F.zero);
-		F.assign(const_cast<Element&>(mOne),F.mOne);
+		F.assign(const_cast<Element&>(mone),F.mone);
 
 		this->_p = F._p;
 		return *this;
@@ -247,9 +245,6 @@ protected:
 
 	static void Init();
 	static void End();
-
-public: static inline Residu_t getMaxModulus() { return 32768; }
-
 };
 
 } // namespace Givaro

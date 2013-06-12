@@ -60,7 +60,7 @@ Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::mul( Rep& R, const Rep& P, 
 	size_t sP = P.size();
 	size_t sQ = Q.size();
 	if ((sQ ==0) || (sP ==0)) { R.reallocate(0); return R; }
-	if (sR != sQ+sP) R.reallocate((size_t)sR = sP+sQ-1);
+	if (sR != sQ+sP) R.reallocate(sR = sP+sQ-1);
 
 	size_t i,j;
 	for (i=0; i<sR; ++i) _domain.assign(R[i], _domain.zero);
@@ -73,18 +73,6 @@ Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::mul( Rep& R, const Rep& P, 
 #endif
 
 template <class Domain>
-inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::sqr( Rep& R, const Rep& P) const
-{
-    const size_t sP = P.size();
-    if (sP ==0) { R.reallocate(0); return R; }
-    size_t sR = sP<<1;
-    if (R.size() != --sR) R.reallocate(sR);
-    
-        // Generic square handler
-    return sqr(R, R.begin(), R.end(), P, P.begin(), P.end());
-}
-
-template <class Domain>
 inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::mul( Rep& R, const Rep& P, const Rep& Q ) const
 {
 	size_t sR = R.size();
@@ -93,16 +81,26 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::mul( Rep& R
 	if ((sQ ==0) || (sP ==0)) { R.reallocate(0); return R; }
 	if (sR != sQ+sP) R.reallocate(sR = sP+sQ-1);
 
-        // Generic multiplication handler
-        // Can use e.g. Karatsuba multiplication
- 	mul(R, R.begin(), R.end(),
-            P, P.begin(), P.end(),
-            Q, Q.begin(), Q.end());
-
-        return setdegree(R);
+	typename Rep::const_iterator ai=P.begin(),bi=Q.begin();
+	typename Rep::iterator ri=R.begin(), rig=R.begin();
+	if (_domain.isZero(*ai))
+		for(;bi!=Q.end();++bi,++ri)
+			*ri = _domain.zero;
+	else
+		for(;bi!=Q.end();++bi,++ri)
+			if (_domain.isZero(*bi))
+				*ri = _domain.zero;
+			else
+				_domain.mul(*ri,*ai,*bi);
+	for(;ri!=R.end();++ri)
+		*ri = _domain.zero;
+	for(++ai,++rig;ai!=P.end();++ai,++rig)
+		if (! _domain.isZero(*ai))
+			for(ri=rig,bi=Q.begin();bi!=Q.end();++bi,++ri)
+				_domain.axpyin(*ri,*ai,*bi);
+	return setdegree(R);
 }
 
-// Compute truncated mul: only the coefficients inside the degree interval, included
 template <class Domain>
 inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::mul( Rep& R, const Rep& P, const Rep& Q, const Degree& Val, const Degree& deg) const
 {
@@ -110,21 +108,21 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::mul( Rep& R
 	size_t sP = P.size();
 	size_t sQ = Q.size();
 	if ((sQ ==0) || (sP ==0)) { R.reallocate(0); return R; }
-	size_t newS = (size_t)value(deg-Val)+1;
+	size_t newS = value(deg-Val)+1;
 	if (sR != newS) R.reallocate(sR = newS);
 	for(typename Rep::iterator ri=R.begin(); ri!= R.end(); ++ri)
 		*ri = _domain.zero;
 
 	for(size_t i=0; i<sR; ++i) {
-		long k=(long)i+Val.value();
+		long k=i+Val.value();
 		size_t j=0;
 		if (static_cast<size_t>(k)>=sQ) {
-			j=static_cast<size_t>(k);
-			k=long(sQ-1);
-			j-=(size_t)k;
+			j=k;
+			k=sQ-1;
+			j-=k;
 		}
 		for( ; (j<sP) && (k>=0); ++j,--k) {
-			_domain.axpyin(R[(size_t)i],P[(size_t)j],Q[(size_t)k]);
+			_domain.axpyin(R[i],P[j],Q[k]);
 		}
 	}
 	return setdegree(R);
@@ -132,24 +130,24 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::mul( Rep& R
 
 template <class Domain>
 inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::mul
-( Rep& R, const Rep& P, const Type_t& u ) const
+( Rep& R, const Rep& P, const Type_t& Val ) const
 {
 	typename Rep::const_iterator ip = P.begin();
 	R.resize(P.size());
 	for(typename Rep::iterator ir = R.begin(); ir != R.end(); ++ir, ++ip)
-		this->_domain.mul(*ir, *ip, u);
+		this->_domain.mul(*ir, *ip, Val);
 	return R;
 }
 
 template <class Domain>
 inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::mul
-( Rep& R, const Type_t& u, const Rep& P ) const
+( Rep& R, const Type_t& Val, const Rep& P ) const
 {
-	return this->mul(R,P,u);
+	return this->mul(R,P,Val);
 }
 } // Givaro
 
-//#include <typeinfo>
+#include <typeinfo>
 
 namespace Givaro {
 
@@ -173,7 +171,7 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::div(Rep& R,
 	if (_domain.isZero(u)) GivError::throw_error(GivMathDivZero("[Poly1Dom<D>::div]"));
 #endif
 	size_t sP =P.size();
-	R.reallocate((size_t)sP);
+	R.reallocate(sP);
 	for (unsigned int i=0; i<sP; ++i)
 		_domain.div(R[i],P[i],u);
 	return setdegree(R);
@@ -268,7 +266,7 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::modin(Rep& 
 	// Last step is erasing of the first values.
 	//     write(std::cerr << "Rem(", A) << " ,";
 	//     write(std::cerr, B) << ", X) mod " << _domain.size();
-	long i = (long)(A.size()-B.size());
+	long i = A.size()-B.size();
 	if (i >= 0) {
 		typedef typename Rep::value_type TT;
 		TT l;
@@ -291,7 +289,7 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::modin(Rep& 
 			*aai = _domain.zero;
 		}
 		//         write(std::cerr << " = ", A) << ";" << std::endl;
-		A.erase(A.begin(), A.begin()+(ssize_t)(A.size()-B.size()-(size_t)i));
+		A.erase(A.begin(), A.begin()+(A.size()-B.size()-i));
 	}
 	//     write(std::cerr << " = ", setdegree(A)) << ";" << std::endl;
 	return setdegree(A);
@@ -350,7 +348,7 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::divmod( Rep
 
 	long degQuo = value(degA-degB);
 	long degRem = value(degA);
-	Q.reallocate((size_t)degQuo+1);
+	Q.reallocate(degQuo+1);
 
 	assign(R,A);
 	// write(std::cerr << "A:=", A) << "; # of degA " << degA << std::endl;
@@ -359,19 +357,18 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::divmod( Rep
 	for (long i=degQuo; i>=0; --i)
 	{
 		// == ld X^ (degRem-degQ)
-		_domain.div(Q[(size_t)i], R[(size_t)degRem], B[(size_t)degB.value()]);
+		_domain.div(Q[i], R[degRem], B[degB.value()]);
 		// _domain.write(std::cerr << "Q[" << i << "]:=", Q[i]) << ';' << std::endl;
 		//  std::cerr << "degB: " << degB << std::endl;
 		for (long j=0; degB>j; ++j) { // rem <- rem - ld*x^(degRem-degB)*B
-			_domain.maxpyin(R[(size_t)(j+i)], Q[(size_t)i], B[(size_t)j]);
+			_domain.maxpyin(R[j+i], Q[i], B[j]);
 		}
-		_domain.assign(R[(size_t)degRem],_domain.zero) ;
-		--degRem;
+		_domain.assign(R[degRem],_domain.zero) ; --degRem;
 		// write(std::cerr << "inR:=", R) << ';' << std::endl;
 	}
 	// write(std::cerr << "Q:=", Q) << "; # of degQ " << degQuo << std::endl;
 	// write(std::cerr << "R:=", R) << "; # of degR " << degRem << std::endl;
-	R.reallocate((size_t)degRem+1);
+	R.reallocate(degRem+1);
 	setdegree(R);
 	//     std::cerr << "END divmod of " << typeid(*this).name() << std::endl;
 	return setdegree(Q);
@@ -415,7 +412,7 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::divmodin( R
 
 	long degQuo = value(degA-degB);
 	long degRem = value(degA);
-	Q.reallocate((size_t)degQuo+1);
+	Q.reallocate(degQuo+1);
 
 	// write(std::cerr << "A:=", A) << "; # of degA " << degA << std::endl;
 	// write(std::cerr << "B:=", B) << "; # of degB " << degB << std::endl;
@@ -423,18 +420,18 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::divmodin( R
 	for (long i=degQuo; i>=0; --i)
 	{
 		// == ld X^ (degRem-degQ)
-		_domain.div(Q[(size_t)i], R[(size_t)degRem], B[(size_t)degB.value()]);
+		_domain.div(Q[i], R[degRem], B[degB.value()]);
 		// _domain.write(std::cerr << "Q[" << i << "]:=", Q[i]) << ';' << std::endl;
 		//  std::cerr << "degB: " << degB << std::endl;
 		for (long j=0; degB>j; ++j) { // rem <- rem - ld*x^(degRem-degB)*B
-			_domain.maxpyin(R[(size_t)(j+i)], Q[(size_t)i], B[(size_t)j]);
+			_domain.maxpyin(R[j+i], Q[i], B[j]);
 		}
-		_domain.assign(R[(size_t)degRem],_domain.zero) ; --degRem;
+		_domain.assign(R[degRem],_domain.zero) ; --degRem;
 		// write(std::cerr << "inR:=", R) << ';' << std::endl;
 	}
 	// write(std::cerr << "Q:=", Q) << "; # of degQ " << degQuo << std::endl;
 	// write(std::cerr << "R:=", R) << "; # of degR " << degRem << std::endl;
-	R.reallocate((size_t)degRem+1);
+	R.reallocate(degRem+1);
 	setdegree(R);
 	//     std::cerr << "END divmod of " << typeid(*this).name() << std::endl;
 	return setdegree(Q);
@@ -477,7 +474,7 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::pdivmod
 
 	long degQuo = value(degA-degB);
 	long degRem = value(degA);
-	Q.reallocate((size_t)degQuo+1);
+	Q.reallocate(degQuo+1);
 	assign(R,A);
 
 	Type_t tmp, lB;
@@ -500,7 +497,7 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::pdivmod
 		_domain.assign(R[degRem],_domain.zero); degQuo--; degRem--;
 		_domain.mulin(m, lB);
 	}
-	R.reallocate((size_t)degRem+1);
+	R.reallocate(degRem+1);
 	setdegree(R);
 	return setdegree(Q);
 	//  Poly1Dom<Domain,Dense>::Rep U,V;
@@ -566,7 +563,7 @@ inline typename Poly1Dom<Domain,Dense>::Rep& Poly1Dom<Domain,Dense>::pmod
 		_domain.assign(R[degR.value()],_domain.zero);
 		degree(degR, R);
 	}
-	R.reallocate((size_t)degR.value()+1);
+	R.reallocate(degR.value()+1);
 	return setdegree(R);
 }
 

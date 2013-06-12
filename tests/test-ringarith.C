@@ -50,8 +50,7 @@ if (TestOneRing(F,a,x)) {\
 
 template<class R, class T1, class T2>
 struct InitOrAssign {
-    void operator()(const R& r, T1& t1, const T2& t2)
-    {
+    void operator()(const R& r, T1& t1, const T2& t2) {
         r.init(t1,t2);
     }
 };
@@ -69,7 +68,7 @@ struct InitOrAssign<R,T,T> {
 
 template<class Ring, class T1, class T2>
 int TestOneRing(const Ring& F, const T1 FIRSTINT, const T2 FIRSTFLOAT)
-{
+{/*{{{*/
 #ifdef GIVARO_DEBUG
 	std::cerr << "testing " ;
 	F.write(std::cerr );
@@ -171,16 +170,16 @@ int TestOneRing(const Ring& F, const T1 FIRSTINT, const T2 FIRSTFLOAT)
 #endif
 	return 0 ;
 
-}
+}/*}}}*/
 
 #define NBITER 50
 
 template<class Ring>
-int TestRing(const Ring& F, const unsigned  long seed)
-{
+int TestRing(const Ring& F, const int seed)
+{/*{{{*/
     long ch = (long) F.characteristic();
     JEONETESTE(F,7UL,-29.3);
-    srand48((long)seed);
+    srand48(seed);
     for(size_t i=0; i< NBITER; ++i) {
         typename Ring::Element x;
         float d;
@@ -194,64 +193,38 @@ int TestRing(const Ring& F, const unsigned  long seed)
         JEONETESTE(F,x,d);
     }
     return 0;
-}
+}/*}}}*/
 
-#ifndef DEGMAX
 #define DEGMAX 75
-#endif
-#ifndef NBITERD
 #define NBITERD 10
-#endif
 
 template<class Ring>
-int TestPolRing(const Ring& F, const unsigned long seed)
-{
+int TestPolRing(const Ring& F, const int seed)
+{/*{{{*/
     GivRandom generator(seed);
-    srand48((long)seed);
+    srand48(seed);
 
     for(size_t i=0; i< NBITERD; ++i) {
         int d1 = int (lrand48() % DEGMAX);
         int d2 = int (lrand48() % DEGMAX);
-        typename Ring::Element x, d, z, o;
+#ifdef GIVARO_DEBUG
+        std::cout << d1 << ' ' << d2 << ' ';
+#endif
+        typename Ring::Element x, d;
         do {
             F.random(generator, x, Degree(d1));
         } while(F.isZero(x));
         do {
             F.random(generator, d, Degree(d2));
-        } while(F.isZero(d));
-#ifdef GIVARO_DEBUG
-        std::cout << d1 << ' ' << d2 << ' ';
-#endif
+        } while(F.isZero(x));
         JEONETESTE(F,x,d);
-        do {
-            F.random(generator, z, Degree(0));
-        } while(F.isZero(z));
-#ifdef GIVARO_DEBUG
-        std::cout << d1 << " 0 ";
-#endif
-        JEONETESTE(F,x,z);
-#ifdef GIVARO_DEBUG
-        std::cout << "0 " << d1 << ' ';
-#endif
-        JEONETESTE(F,z,x);
-        do {
-            F.random(generator, o, Degree(1));
-        } while(F.isZero(o));
-#ifdef GIVARO_DEBUG
-        std::cout << d2 << " 1 ";
-#endif
-        JEONETESTE(F,d,o);
-#ifdef GIVARO_DEBUG
-        std::cout << "1 " << d2 << ' ';
-#endif
-        JEONETESTE(F,o,d);
     }
     return 0;
-}
+}/*}}}*/
 
 int main(int argc, char ** argv)
-{
-    unsigned long seed = (unsigned long) (argc>1?atoi(argv[1]):BaseTimer::seed());
+{/*{{{*/
+    int seed = int(argc>1?atoi(argv[1]):BaseTimer::seed());
 #ifdef GIVARO_DEBUG
     std::cerr << "seed: " << seed << std::endl;
 #endif
@@ -398,7 +371,7 @@ int main(int argc, char ** argv)
 #endif
 
 	return 0;
-}
+}/*}}}*/
 
 /* -*- mode: C++; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*- */
 // vim:sts=8:sw=8:ts=8:noet:sr:cino=>s,f0,{0,g0,(0,\:0,t0,+0,=s:syntax=cpp.doxygen

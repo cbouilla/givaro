@@ -49,7 +49,7 @@ public :
 	// -- Constantes
 	const Rep zero;
 	const Rep one;
-	const Rep mOne;
+	const Rep mone;
 
 	void reduce(Ring_E& a, Ring_E& b) const
 	{
@@ -72,8 +72,8 @@ public :
 	}
 
 
-	FracDom (const RingDom& R ) : Ring_t(R), zero(R.zero,R.one), one(R.one,R.one) , mOne(R.mOne,R.one){}
-	FracDom (const Self_t& F) : Ring_t(static_cast<const Ring_t&>(F)), zero(F.zero), one(F.one), mOne(F.mOne) {}
+	FracDom (const RingDom& R ) : Ring_t(R), zero(R.zero,R.one), one(R.one,R.one) , mone(R.mone,R.one){}
+	FracDom (const Self_t& F) : Ring_t(static_cast<const Ring_t&>(F)), zero(F.zero), one(F.one), mone(F.mone) {}
 	const Ring_t& getdomain() const
 	{ return static_cast<const Ring_t&>(*this); }
 	const Ring_t& getring() const
@@ -484,7 +484,7 @@ public :
 		// -- W <-- P^n
 		Rep& pow( Rep& W, const Rep& P, long n) const
 		{
-			unsigned long l = (unsigned long)GIVABS(n);
+			unsigned long l = GIVABS(n);
 			if (n>0) {
 				dom_power(W._num,P._num,l,static_cast<Ring_t&>(*this));
 				dom_power(W._den,P._den,l,static_cast<Ring_t&>(*this));

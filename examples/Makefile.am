@@ -13,4 +13,4 @@ SUBDIRS=Rational Integer FiniteField Polynomial
 examples: $(SUBDIRS)
 
 $(SUBDIRS):
-	$(MAKE) -C $@
+	make -C $@

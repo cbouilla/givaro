@@ -4,9 +4,11 @@
 // Givaro is governed by the CeCILL-B license under French law
 // and abiding by the rules of distribution of free software.
 // see the COPYRIGHT file for more details.
+// Givaro : Prime numbers
+//              Factors,
+// Needs list structures : stl ones for instance
 // Time-stamp: <06 Jun 06 15:03:59 Jean-Guillaume.Dumas@imag.fr>
 // =================================================================== //
-
 #ifndef __GIVARO_factorisation_INL
 #define __GIVARO_factorisation_INL
 
@@ -134,9 +136,9 @@ namespace Givaro {
 				n >>= 1;
 			while (!(n & 0x1));
 		}
-		short * Ip = new short[(size_t)n+1];
+		short * Ip = new short[n+1];
 		int i;
-		for(int ii=(int)n+1;ii--;)
+		for(int ii=n+1;ii--;)
 			Ip[ii] = 0L;
 		i=3;
 		int j, ii;
@@ -237,6 +239,7 @@ namespace Givaro {
 	//     Container<Rep> Lf;
 	//     Container<unsigned long> Le;
 	// #else
+#include <vector>
 	template<class RandIter>
 	template<class Container> Container& IntFactorDom<RandIter>::divisors( Container& L, const Rep& n)  const
 	{

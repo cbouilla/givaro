@@ -4,19 +4,19 @@
 // Givaro is governed by the CeCILL-B license under French law
 // and abiding by the rules of distribution of free software.
 // see the COPYRIGHT file for more details.
-// Time-stamp: <19 Dec 12 11:54:42 Jean-Guillaume.Dumas@imag.fr>        //
+// Time-stamp: <15 Apr 11 09:09:19 Jean-Guillaume.Dumas@imag.fr>        //
 // ==================================================================== //
 // Givaro replacement for ssh-keygen: generated keys use strong primes  //
 // Random generator is seeded by					 //
 //	- true randomness in file, e.g. 				 //
-//	  dd if=/dev/random of=.rand bs=1k count=16			 //
+//	  dd if=/dev/urandom of=.rand bs=1k count=16			 //
 //	- otherwise gettimeofday is used, see givrandom.h		 //
 // File formats are then managed by openssl and openssh, thus this file //
 // requires to be compiled with -lssl -lssh -lopenbsd-compat            //
 // Warning: Sometimes putting -lssh twice is required                   //
 // You also need the openssl and openssh development headers below:     //
 // openssh/buffer.h openssh/key.h openssh/uuencode.h openssh/xmalloc.h  //
-// The latter libraries/headers are avaible from openssl and openssh    //
+// The latter libraries/heqders are avaible from openssl and openssh    //
 // openssl > 0.9.8  and  openssh > 5.2p1  are expected                  //
 // ==================================================================== //
 /*! @file examples/Integer/givaro-ssh-keygen.C
@@ -132,7 +132,7 @@ int mymain(FILE* fileout, FILE* filepub, long s, unsigned long seed) {
 
         // Write Public key in ssh b64 format
     key_write(&rsakey, filepub);
-    fprintf(filepub," givaro\n");
+    fprintf(filepub,"\n");
 
     return 0;
 

@@ -27,14 +27,13 @@ namespace Givaro {
 	{}
 
 	template<class RING, class Domain>
-	RNSsystem<RING,Domain>::RNSsystem (const Self_t & R)
+	RNSsystem<RING,Domain>::RNSsystem (const RNSsystem<RING,Domain>& R)
 	: _primes(R._primes, givWithCopy()),
 	_ck(R._ck, givWithCopy())
 	{}
 
 	template<class RING, class Domain>
-	void RNSsystem<RING,Domain>::setPrimes (const domains& inprimes)
-	{
+	void RNSsystem<RING,Domain>::setPrimes (const RNSsystem<RING,Domain>::domains& inprimes) {
 		_primes.allocate(0);
 		_primes.copy( inprimes );
 		_ck.reallocate(0);
@@ -42,7 +41,7 @@ namespace Givaro {
 
 	// -- Array of primes are given
 	template<class RING, class Domain>
-	RNSsystem<RING,Domain>::RNSsystem( const domains& inprimes)
+	RNSsystem<RING,Domain>::RNSsystem( const RNSsystem<RING,Domain>::domains& inprimes)
 	: _primes(inprimes, givWithCopy()),
 	_ck(0)
 	{
@@ -58,7 +57,7 @@ namespace Givaro {
 
 		// - reallocation of a new array :
 		int Size = (int) _primes.size();
-		_ck.reallocate((size_t)Size);
+		_ck.reallocate(Size);
 		//  _ck[0] = Neutral::zero; // -- undefined and never used
 
 		for (int k=1; k < Size; ++k)

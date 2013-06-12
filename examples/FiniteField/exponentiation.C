@@ -7,7 +7,7 @@
 /*! @file examples/FiniteField/exponentiation.C
  * @ingroup examples
  * @ingroup finitefields
- * @example examples/FiniteField/exponentiation.C
+ * @example examples/FiniteField/exponentation.C
  * @brief NO DOC
  */
 
@@ -41,9 +41,8 @@ int main(int argc, char ** argv) {
 
 
  {
-	 typedef GFqDom<int>::Residu_t TT;
     int Mod = 13; int exponent = 1;
-    GFqDom<int> GF13( (TT) Mod, (TT) exponent );  // finite field with 13 elements
+    GFqDom<int> GF13( Mod, exponent );  // finite field with 13 elements
     GFqDom<int>::Element a, c;
 
     GF13.init(a, 7);    // 7 modulo   13

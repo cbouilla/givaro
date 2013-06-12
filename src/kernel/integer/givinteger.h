@@ -6,15 +6,10 @@
 // see the COPYRIGHT file for more details.
 // Authors: T. Gautier, J.-G. Dumas
 // =============================================================
-
-/*! @file givinteger.h
- * @ingroup integers
- * @brief Integer Domain class definition.
- */
-
+// Description:
+// Integer Domain class definition
 #ifndef __GIVARO_integer_H
 #define __GIVARO_integer_H
-
 #include "givaro/givbasictype.h"
 #include "givaro/givinit.h"
 #include "givaro/giverror.h"
@@ -24,15 +19,14 @@
 
 namespace Givaro {
 	//------------------------------------ Class IntegerDom
-	//! Integer Domain.
 	class IntegerDom {
 	public:
 		typedef Integer Rep;
 		typedef Rep Element;
 
 
-		IntegerDom() : one(1UL), mOne(-1L), zero(0UL) {}
-		IntegerDom(const IntegerDom&) : one(1UL), mOne(-1L), zero(0UL) {}
+		IntegerDom() : one(1UL), mone(-1L), zero(0UL) {}
+		IntegerDom(const IntegerDom&) : one(1UL), mone(-1L), zero(0UL) {}
 
 		int operator==( const IntegerDom&) const
 		{
@@ -45,7 +39,7 @@ namespace Givaro {
 
 		// -- Constants:
 		const Integer one;
-		const Integer mOne;
+		const Integer mone;
 		const Integer zero;
 
 		// -- assignement

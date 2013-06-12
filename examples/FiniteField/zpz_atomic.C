@@ -49,7 +49,7 @@ int main(int argc, char ** argv)
     Timer inver;
     inver.clear();
     inver.start();
-    Domain GFq((Domain::Residu_t)P);
+    Domain GFq((Domain::Element)P);
 
     int i;
     std::cout << "."<< std::flush;

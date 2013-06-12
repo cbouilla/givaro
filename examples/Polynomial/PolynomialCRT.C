@@ -47,15 +47,15 @@ bool tmain(int argc, char ** argv, GivRandom& generator) {
     bool pass = true;
     typedef Poly1CRT< Field >  CRTSystem;
     typedef typename CRTSystem::Element	Poly;
-//     typedef typename CRTSystem::Type_t	Scal;
-//     typedef typename CRTSystem::array_E	VPoly;
+    typedef typename CRTSystem::Type_t	Scal;
+    typedef typename CRTSystem::array_E	VPoly;
     typedef typename CRTSystem::array_T	VScal;
 
     IntPrimeDom ID;
     Integer a( generator() >>(argc>2?atoi(argv[2]):17) );
     Field F(ID.nextprimein( a ));
 
-    VScal Primes( argc>1 ? (size_t)atoi(argv[1]):15);
+    VScal Primes( argc>1 ? atoi(argv[1]):15);
     VScal Moduli( Primes.size() );
 
     typename VScal::iterator i = Primes.begin();
@@ -105,7 +105,7 @@ bool tmain(int argc, char ** argv, GivRandom& generator) {
             break;
         }
 
-    CRT.getpolydom().random(generator, res, Degree((long)Primes.size()-1));
+    CRT.getpolydom().random(generator, res, Degree(Primes.size()-1));
     CRT.RingToRns( Verifs, res );
     Poly nres;
 
@@ -128,15 +128,15 @@ bool tmainext(int argc, char ** argv, GivRandom& generator) {
     bool pass = true;
     typedef Poly1CRT< Field >  CRTSystem;
     typedef typename CRTSystem::Element	Poly;
-//     typedef typename CRTSystem::Type_t	Scal;
-//     typedef typename CRTSystem::array_E	VPoly;
+    typedef typename CRTSystem::Type_t	Scal;
+    typedef typename CRTSystem::array_E	VPoly;
     typedef typename CRTSystem::array_T	VScal;
 
     IntPrimeDom ID;
     Integer a( generator() >>(argc>2?atoi(argv[2]):17) );
     Field F(ID.nextprimein( a ),2);
 
-    VScal Primes( argc>1 ? (size_t)atoi(argv[1]):15);
+    VScal Primes( argc>1 ? atoi(argv[1]):15);
     VScal Moduli( Primes.size() );
 
     typename VScal::iterator i = Primes.begin();
@@ -187,7 +187,7 @@ F.write(std::cout, *it) << std::endl;
             break;
         }
 
-    CRT.getpolydom().random(generator, res, Degree((long)Primes.size()-1));
+    CRT.getpolydom().random(generator, res, Degree(Primes.size()-1));
     CRT.RingToRns( Verifs, res );
     Poly nres;
 
@@ -213,7 +213,7 @@ int main(int argc, char ** argv) {
         // argv[2] : 2^{32-j} is size of primes
         // argv[3] : seed for generator
 
-    GivRandom seedor( argc>3 ? (unsigned long)atoi(argv[3]): (unsigned long)BaseTimer::seed() );
+    GivRandom seedor( argc>3 ? atoi(argv[3]): BaseTimer::seed() );
     unsigned long seed = seedor.seed();
     std::cerr << "seed: " << seed << std::endl;
 

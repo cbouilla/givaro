@@ -25,14 +25,13 @@ using namespace Givaro;
 
 int main(int argc, char** argv)
 {
-  typedef GFqDom<long>::Residu_t UT ;
-  UT MOD;
+  GFqDom<long>::Residu_t MOD;
   if (argc > 1)
-	  MOD =(UT) (atoi(argv[1]));
+	  MOD = atoi(argv[1]);
   else
 	  std::cin >> MOD;
   unsigned long expo = 1;
-  if (argc > 2) expo = (unsigned long)atoi(argv[2]);
+  if (argc > 2) expo = atoi(argv[2]);
 
   GFqDom<long> F(MOD, expo);
 

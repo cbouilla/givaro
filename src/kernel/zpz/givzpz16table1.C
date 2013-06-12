@@ -16,7 +16,7 @@
 namespace Givaro {
 
 ZpzDom<Log16>::ZpzDom( Residu_t p ) :
-	_p(p),_pmone(Residu_t(p-1)),zero(Rep(_pmone << 1)), one(0),mOne(Rep(_pmone>>1))
+	_p(p),_pmone(Rep(p-1)),zero(Rep(_pmone << 1)), one(0),mone(Rep(_pmone>>1))
 {
 	int32_t i,j;
 
@@ -39,7 +39,7 @@ ZpzDom<Log16>::ZpzDom( Residu_t p ) :
 	{
 		for(i=1; i<_p; i++)
 		{
-			accu = Residu_t((accu * seed) % _p);
+			accu = Rep((accu * seed) % _p);
 			//cout << i << " :: " << accu << endl;
 			_tab_rep2value[i] = accu;
 			if (accu == 1)
@@ -53,7 +53,7 @@ ZpzDom<Log16>::ZpzDom( Residu_t p ) :
 		if (i ==_p-1) not_found = 0;
 		else {
 			do {
-				seed = Residu_t(rand() % _p);
+				seed = Rep(rand() % _p);
 			} while ((seed ==0) && (seed !=1));
 			//      if (seed < 0) seed += _p;
 		}
@@ -72,7 +72,7 @@ ZpzDom<Log16>::ZpzDom( Residu_t p ) :
 	  }
 	  */
 	// -- Table for multiplication
-	_tab_mul = new Power_t[(size_t)fourp];
+	_tab_mul = new Power_t[fourp];
 	for(j=0; j<_pmone; j++)
 		_tab_mul[j] = (Rep)j;
 	for(j=_pmone; j< (int32_t)zero; j++)
@@ -85,7 +85,7 @@ ZpzDom<Log16>::ZpzDom( Residu_t p ) :
 	_tab_neg = &_tab_mul[_pmone/2];
 
 	// -- Table for 1+value
-	_tab_pone = new Power_t[(size_t)fourp];
+	_tab_pone = new Power_t[fourp];
 	_tab_addone = &_tab_pone[(int32_t)(zero)];
 
 	/* Pascal Giorgi 24/04/02
@@ -121,7 +121,7 @@ ZpzDom<Log16>::ZpzDom( Residu_t p ) :
 
 
 	// -- Table for 1-value
-	_tab_mone = new Power_t[(size_t)fourp];
+	_tab_mone = new Power_t[fourp];
 	_tab_subone = &_tab_mone[(int32_t)zero];
 
 	for(j=_pmone; j<=(int32_t)zero; j++)
@@ -161,7 +161,7 @@ ZpzDom<Log16>::ZpzDom(const ZpzDom<Log16>& F) :
 	_tab_pone ( F._tab_pone),
 	numRefs ( F.numRefs),
 
-	zero(F.zero), one(F.one),mOne(F.mOne)
+	zero(F.zero), one(F.one),mone(F.mone)
 {
   (*numRefs)++;
 #ifdef GIVARO_DEBUG
@@ -175,7 +175,7 @@ ZpzDom<Log16>& ZpzDom<Log16>::operator=( const ZpzDom<Log16>& F)
 
 	F.assign(const_cast<Element&>(one),F.one);
 	F.assign(const_cast<Element&>(zero),F.zero);
-	F.assign(const_cast<Element&>(mOne),F.mOne);
+	F.assign(const_cast<Element&>(mone),F.mone);
 
 
   if (this->numRefs) {

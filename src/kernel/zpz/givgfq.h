@@ -5,12 +5,12 @@
 // and abiding by the rules of distribution of free software.
 // see the COPYRIGHT file for more details.
 // file: givgfq.h
-// Time-stamp: <08 Nov 11 15:07:32 Jean-Guillaume.Dumas@imag.fr>
+// Time-stamp: <08 Oct 11 09:38:59 Jean-Guillaume.Dumas@imag.fr>
 // date: 1999
 // version:
 // author: Jean-Guillaume.Dumas
 
-/*! @file givgfq.h
+/*! @file zpz/givgfq.h
  * @ingroup zpz
  * @brief   Arithmetic on GF(p^k), with p a prime number less than 2^16.
  */
@@ -27,7 +27,7 @@
 
 namespace Givaro {
 
-//! class GFqDom
+// ------------------------------------------------- class GFqDom
 template<class TT> class GFqDom {
 protected:
 	typedef typename Signed_Trait<TT>::unsigned_type UTT;
@@ -39,12 +39,12 @@ public:
 protected:
 	UTT _characteristic;	// Field Characteristic (p)
 	UTT _exponent;		// Extension degree (k)
-	UTT _irred;		// Irreducible polynomial in p-adic
+	UTT _irred;			// Irreducible polynomial in p-adic
 	UTT _q;			// p^k
-	UTT _qm1;		// p^k-1
-	UTT _qm1o2;		// (p^k-1)/2
+	UTT _qm1;			// p^k-1
+	UTT _qm1o2;			// (p^k-1)/2
 public:
-        Rep mOne;
+        Rep mone;
 
 protected:
 	// G is a generator of GF(q)
@@ -55,10 +55,6 @@ protected:
 	std::vector<UTT> _log2pol;
 	std::vector<UTT> _pol2log;
 	std::vector<TT> _plus1;
-
-    	UTT zech2padic(UTT x) { return _log2pol[x]; };
-    	UTT padic2zech(UTT x) { return _pol2log[x]; };
-
 
 	// Floating point representations
 	double _dcharacteristic;
@@ -79,7 +75,7 @@ public:
 	typedef Rep* Array;
 	typedef const Rep* constArray;
 
-	GFqDom(): zero(0), one(1), mOne(-1), _log2pol(0), _pol2log(0),_plus1(0) {}
+	GFqDom(): zero(0), one(1), mone(-1), _log2pol(0), _pol2log(0),_plus1(0) {}
 
         // Automatic construction
 	GFqDom( const UTT P, const UTT e = 1);
@@ -95,7 +91,7 @@ public:
 	{
 		zero = F.zero;
 		one = F.one;
-                mOne = F.mOne;
+                mone = F.mone;
 		_characteristic = F._characteristic;
 		_dcharacteristic = F._dcharacteristic;
 		_exponent = F._exponent;
@@ -121,7 +117,7 @@ public:
 	{
 		this->zero = F.zero;
 		this->one = F.one;
-		this->mOne = F.mOne;
+		this->mone = F.mone;
 		this->_characteristic = F._characteristic;
 		this->_dcharacteristic = F._dcharacteristic;
 		this->_exponent = F._exponent;

@@ -17,22 +17,17 @@
  *
  */
 
-/** @file givtimer.h
- * @ingroup system
- * @brief timer
- */
-
 #ifndef __GIVARO_timer_H
 #define __GIVARO_timer_H
 
 #include <iostream>
-#include <givaro/givconfig.h>
 namespace Givaro {
 // class BaseTimer; class RealTimer; class SysTimer; class UserTimer;
 
 /** \brief base for class RealTimer; class SysTimer; class UserTimer;
   \ingroup util
   */
+
 class BaseTimer {
 public:
 	enum {
@@ -71,13 +66,11 @@ public:
 	double _t;        // time
 };
 
-//! I/O
 inline std::ostream& operator<< (std::ostream& o, const BaseTimer& BT)
 {
 	return BT.print(o);
 }
 
-//! Real timer
 class RealTimer : public BaseTimer {
 public:
 	inline RealTimer( const BaseTimer& BT ): BaseTimer(BT) {};
@@ -93,7 +86,6 @@ public:
 };
 
 
-//! User timer
 class UserTimer : public BaseTimer {
 public:
 	inline UserTimer( const BaseTimer& BT ) : BaseTimer(BT) {};
@@ -108,7 +100,7 @@ public:
 
 };
 
-//! Sys timer
+
 class SysTimer : public BaseTimer {
 public:
 	inline SysTimer( const BaseTimer& BT ): BaseTimer(BT) {};
@@ -124,7 +116,6 @@ public:
 };
 
 
-//! Timer
 class Timer {
 public :
 
@@ -223,20 +214,15 @@ private:
 	SysTimer  st;
 };
 
-//! I/O
 inline std::ostream &operator << (std::ostream &o, const Timer &T)
 {
 	double ut = T.usertime();
 	if (ut < 0.0000000001) ut = 0;
 	return o << T.realtime() << "s (" << ut << " cpu) [" << T.count() << "]";
 }
-}
 
-#ifdef GIVARO_USES_OMP
+#if defined(_OPENMP) || defined(OMP_H) || defined(__OMP_H)
 #include <omp.h>
-
-namespace Givaro {
-//! OMP timer
 struct OMPTimer {
 	double _c;
 	void start() { _c = omp_get_wtime(); }
@@ -262,9 +248,8 @@ struct OMPTimer {
 	}
 	OMPTimer  operator -() { OMPTimer r; r._c = - _c; return r; }
 };
-} // namespace Givaro
-#endif // OMP
+#endif
 
+} // namespace Givaro
 
 #endif // __GIVARO_timer_H
-// vim:sts=8:sw=8:ts=8:noet:sr:cino=>s,f0,{0,g0,(0,\:0,t0,+0,=s

@@ -9,9 +9,6 @@
 // Modified: JG. Dumas, BB.
 // $Id: gmp++_int_mod.C,v 1.17 2010-12-22 13:47:45 jgdumas Exp $
 // ==========================================================================
-/** @file gmp++/gmp++_int_mod.C
- * moding stuff.
- */
 
 #ifndef __GIVARO_gmpxx_gmpxx_int_mod_C
 #define __GIVARO_gmpxx_gmpxx_int_mod_C
@@ -34,14 +31,14 @@ namespace Givaro {
 		mpz_mod( (mpz_ptr)&res.gmp_rep, (mpz_ptr)&res.gmp_rep, (mpz_srcptr)&n.gmp_rep );
 		return res;
 	}
-	Integer& Integer::modin(Integer& res, const long unsigned int n)
+	Integer& Integer::modin(Integer& res, const unsigned long n)
 	{
 		if (isZero(res)) return res;
 		// mpz_tdiv_r_ui( (mpz_ptr)&res.gmp_rep, (mpz_srcptr)&res.gmp_rep, n);
 		mpz_mod_ui( (mpz_ptr)&res.gmp_rep, (mpz_srcptr)&res.gmp_rep, n);
 		return res;
 	}
-	Integer& Integer::modin(Integer& res, const long int n)
+	Integer& Integer::modin(Integer& res, const long n)
 	{
 		if (isZero(res)) return res;
 		// int sgn = sign(n);
@@ -65,7 +62,7 @@ namespace Givaro {
 		assert(!(res<0) && (res<abs(n2)));
 		return res;
 	}
-	Integer& Integer::mod(Integer& res, const Integer& n1, const long int n2)
+	Integer& Integer::mod(Integer& res, const Integer& n1, const long n2)
 	{
 		if (isZero(n1)) return res = Integer::zero;
 		// int sgn = sign(n2);
@@ -80,7 +77,7 @@ namespace Givaro {
 		assert(!(res<0) && (res<std::abs(n2)));
 		return res;
 	}
-	Integer& Integer::mod(Integer& res, const Integer& n1, const long unsigned int n2)
+	Integer& Integer::mod(Integer& res, const Integer& n1, const unsigned long n2)
 	{
 		if (isZero(n1)) return res = Integer::zero;
 		// mpz_tdiv_r_ui( (mpz_ptr)&res.gmp_rep, (mpz_ptr)&n1.gmp_rep, n2);
@@ -98,7 +95,7 @@ namespace Givaro {
 		return *this;
 	}
 
-	Integer& Integer::operator %= (const long unsigned int l)
+	Integer& Integer::operator %= (const unsigned long l)
 	{
 		if (isZero(*this)) return *this;
 #ifdef DEBUG
@@ -114,7 +111,7 @@ namespace Givaro {
 		return *this;
 	}
 
-	Integer& Integer::operator %= (const long int l)
+	Integer& Integer::operator %= (const long l)
 	{
 		if (isZero(*this)) return *this;
 #ifdef DEBUG
@@ -141,7 +138,7 @@ namespace Givaro {
 		return res;
 	}
 
-	long Integer::operator % (const long unsigned int l) const
+	long Integer::operator % (const unsigned long l) const
 	{
 #if 0
 		if (isZero(*this)) return 0UL;
@@ -150,7 +147,7 @@ namespace Givaro {
 		else {
 			Integer Neg;
 			mpz_neg( (mpz_ptr)&(Neg.gmp_rep), (mpz_ptr)&gmp_rep );
-			long unsigned res = mpz_tdiv_ui( (mpz_ptr)&(Neg.gmp_rep), l);
+			unsigned long res = mpz_tdiv_ui( (mpz_ptr)&(Neg.gmp_rep), l);
 			if (res > 0UL) return (l-res);
 			else return 0UL;
 		}
@@ -159,7 +156,7 @@ namespace Givaro {
 		if (isZero(*this)) return 0UL;
 		bool isneg = (*this)<0 ;
 		//CONDITION: mpz_tdiv_ui does NOT consider the sign of gmp_rep
-		long unsigned res = mpz_tdiv_ui( (mpz_srcptr)&gmp_rep, l);
+		unsigned long res = mpz_tdiv_ui( (mpz_srcptr)&gmp_rep, l);
 #ifdef DEBUG
 		Integer toto = res;
 		if (isneg) toto = -(long)res ;
@@ -167,15 +164,14 @@ namespace Givaro {
 		// std::cout << toto << ',' << l << ',' << ',' << *this << std::endl;
 		assert((toto<l) && (-toto<l) && (toto.priv_sign()*(*this).priv_sign()>=0)) ;
 #endif
-		if (!res)
-			return (long)res ;
+		if (!res) return res ;
 		if (isneg) return (-(long)res) ;
 
 
-		return (long)res ;
+		return res ;
 	}
 
-	long Integer::operator % (const long int l) const
+	long Integer::operator % (const long l) const
 	{
 #if 0
 		if (l ==0) {
@@ -184,10 +180,10 @@ namespace Givaro {
 #endif
 		long res ;
 		if (l>0) {
-			res = static_cast<long>(this->operator%( static_cast<long unsigned>(l) ) );
+			res = static_cast<long>(this->operator%( static_cast<unsigned long>(l) ) );
 		}
 		else {
-			res = static_cast<long>(this->operator%( static_cast<long unsigned>( -l ) ) );
+			res = static_cast<long>(this->operator%( static_cast<unsigned long>( -l ) ) );
 		}
 
 		// std::cout << res << ',' << l << ',' << *this << std::endl;
@@ -199,26 +195,26 @@ namespace Givaro {
 	{
 		double res ;
 		if (l>0)
-			res =  static_cast<double>(this->operator%( static_cast<long unsigned>(l) ) );
+			res =  static_cast<double>(this->operator%( static_cast<unsigned long>(l) ) );
 		else{
-			res =  static_cast<double>(this->operator%( static_cast<long unsigned>(-l) ) );
+			res =  static_cast<double>(this->operator%( static_cast<unsigned long>(-l) ) );
 		}
 		assert((res<GIVABS(l)) && (res> -GIVABS(l)) && (((res>0)?1:((res==0)?0:-1))*(*this).priv_sign()>=0)) ;
 		return res;
 	}
 
 	//Added by Dan Roche, 6-28-04
-#ifdef __USE_GMPPLUSPLUS_SIXTYFOUR__
-	long long unsigned Integer::operator % (const long long unsigned int l) const
+#ifdef __USE_64_bits__
+	unsigned long long Integer::operator % (const unsigned long long l) const
 	{
 		if (isZero(*this)) return 0LL;
 		Integer Res(Integer::one);
 		Integer Divisor(l);
 		mpz_tdiv_r( (mpz_ptr)&(Res.gmp_rep), (mpz_srcptr)&gmp_rep, (mpz_ptr)&(Divisor.gmp_rep) );
-		return (long long unsigned)( Res );
+		return (unsigned long long)( Res );
 	}
 
-	long long Integer::operator % (const long long int l) const
+	long long Integer::operator % (const long long l) const
 	{
 		if (isZero(*this)) return 0LL;
 		Integer Res(Integer::one);
@@ -233,7 +229,7 @@ namespace Givaro {
 	{
 		return Integer(l) % n;
 	}
-	 Integer operator % (const long int l, const Integer& n)
+	 Integer operator % (const long l, const Integer& n)
 	{
 		return Integer(l) % n;
 	}
@@ -243,7 +239,7 @@ namespace Givaro {
 	}
 	 Integer operator % (const Integer& n, const unsigned int l)
 	{
-		return n % (long unsigned)l;
+		return n % (unsigned long)l;
 	}
 
 	 Integer& operator %= (Integer& n, const int l)
@@ -252,7 +248,7 @@ namespace Givaro {
 	}
 	 Integer& operator %= (Integer& n, const unsigned int l)
 	{
-		return n %= (long unsigned)l;
+		return n %= (unsigned long)l;
 	}
 
 
